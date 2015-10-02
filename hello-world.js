@@ -60,7 +60,7 @@ function gFoo () {
 
     }
 
-    console.log('%cThis will be formatted with large, blue text',"color: blue; font-size: large");
+    //console.log('%cThis will be formatted with large, blue text',"color: blue; font-size: large");
 
 
     console.timeEnd('colors');

@@ -1,0 +1,259 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+
+<link rel="stylesheet" type="text/css" href="PokerHand.css">
+<!-- in line version of style sheet
+<style type="text/css">
+body 
+{
+    background-color:green;
+}
+</style>
+-->
+<style type="text/css">
+  div.smallCards{
+    border:5px solid;
+    border-color:black;
+
+    outline-width: 3px;
+    outline-color: white;
+    outline-style: groove;
+
+
+    margin-top: 75px;
+    margin-bottom: 75px;
+
+    padding-left: 75px;
+    padding-top: 75px;
+    padding-bottom: 75px;
+  }
+</style>
+
+<style type="text/css">
+  img.curCard {
+    outline-width: 3px;
+    outline-color: purple;
+    outline-style: groove;
+  }
+</style>
+
+<script type="text/javascript">
+<!--
+var gCard0;
+var gCard4;
+var gCurCard;
+var gSmallCards;
+  
+function init(){
+  var img;
+  img = document.getElementById('card0');
+  img.style.position= 'relative'; 
+  img.style.left = '0px'; 
+  img.style.bottom = '0px'; 
+  gCard0 = img;
+
+  img = document.getElementById('card4');
+  img.style.position= 'relative'; 
+  img.style.left = '0px'; 
+  img.style.bottom = '0px'; 
+  gCard4 = img;
+
+  gCurCard = gCard0;
+  gCurCard.style.zIndex = 1;
+  gCurCard.className="curCard";
+
+  gSmallCards = document.getElementById('smallCards');
+}
+window.onload =init;
+//-->
+</script>
+
+<script type="text/javascript" src="moveRight.js">
+<!--
+we got the code out of a file called moveRight.js
+//-->
+</script>
+
+<script type="text/javascript">
+<!--
+function moveCardLeft(img,incr){
+  var imgOffsetLeft = img.offsetLeft;
+  var smallCardsOffsetLeft = gSmallCards.offsetLeft;
+
+  //var imgClientLeft = img.clientLeft;
+  //var smallCardsClientLeft = gSmallCards.clientLeft;
+  //console.log('img       offsetLeft:',imgOffsetLeft);
+  //console.log('container offsetLeft:',smallCardsOffsetLeft);
+  //console.log('img       clientLeft:',imgClientLeft);
+  //console.log('container clientLeft:',smallCardsClientLeft);
+
+  var left = parseInt(img.style.left);
+
+  if (imgOffsetLeft > smallCardsOffsetLeft+incr) {
+      left -= incr;
+      //console.log('img left:',left);
+      img.style.left = left + 'px';
+  } else {
+    /*console.log('movement left halted')*/;
+  }
+
+}
+//-->
+</script>
+
+<script type="text/javascript">
+<!--
+function moveCardUp(img,incr){
+  var imgOffsetTop = img.offsetTop;
+  var smallCardsOffsetTop = gSmallCards.offsetTop;
+
+  var bottom = parseInt(img.style.bottom);
+
+  if (imgOffsetTop > smallCardsOffsetTop + incr) {
+      bottom += incr;
+      img.style.bottom = bottom + 'px';
+  } else {
+    /*console.log('movement up halted')*/;
+  }
+}
+//-->
+</script>
+
+<script type="text/javascript">
+<!--
+function moveCardDown(img,incr){
+  var imgOffsetTop = img.offsetTop;
+  var imgHeight    = img.offsetHeight;
+  var imgOffsetBottom = imgOffsetTop + imgHeight;
+
+  var smallCardsOffsetTop = gSmallCards.offsetTop;
+  var smallCardsOffsetHeight = gSmallCards.offsetHeight;
+  var smallCardsOffsetBottom = smallCardsOffsetTop + smallCardsOffsetHeight;
+
+  //console.log('img       offsetBottom:',imgOffsetBottom);
+  //console.log('container offsetBottom:',smallCardsOffsetBottom);
+
+  var bottom = parseInt(img.style.bottom);
+
+  if (imgOffsetBottom < smallCardsOffsetBottom - incr) {
+      bottom -= incr;
+      img.style.bottom = bottom + 'px';
+  } else {
+    /*console.log('movement down halted')*/;
+  }
+}
+//-->
+</script>
+
+<script type="text/javascript">
+<!--
+function setCardCurrent(card){
+  gCurCard.style.zIndex = 0;
+  gCurCard.className="";
+
+  gCurCard = card;
+  gCurCard.style.zIndex = 1;
+  gCurCard.className="curCard";
+}
+//-->
+</script>
+
+<script type="text/javascript">
+<!--
+function swapCardsSrc(cardA,cardB){
+  var tmp = cardA.src;
+  cardA.src = cardB.src
+  cardB.src = tmp;
+}
+//-->
+</script>
+
+<script type="text/javascript">
+<!--
+function startGame(buttonObj){
+  alert(buttonObj.type);
+  alert(buttonObj.value);
+  var response = prompt('really ready to start game?', 'yes');
+  alert(response);
+}
+//-->
+</script>
+
+</head>
+
+<!-- this is a comment... -->
+
+<body>
+
+<h2> here's your poker hand...</h2>
+
+<!--
+<div id="bigCards">
+
+<h3> with big images...</h3>
+
+<img src="../cardimages/big/150/clubs-10-150.png" alt="10 of clubs" />
+
+<img src="../cardimages/big/150/hearts-10-150.png" alt="10 of hearts" />
+
+<img src="../cardimages/big/150/diamonds-10-150.png" alt="10 of diamonds" />
+
+<img src="../cardimages/big/150/spades-10-150.png" alt="10 of spades" />
+
+<img src="../cardimages/big/150/hearts-k-150.png" alt="king of hearts" />
+
+</div>
+-->
+
+<div id="smallCards" class="smallCards">
+
+<!--
+<h3> ...or small images...</h3>
+-->
+
+
+<img id="card0" src="../cardimages/small/75/clubs-10-75.png"  />
+
+<img id="card1" src="../cardimages/small/75/hearts-10-75.png"  />
+
+<img id="card2" src="../cardimages/small/75/diamonds-10-75.png"  />
+
+<img id="card3" src="../cardimages/small/75/spades-10-75.png"  />
+
+<img id="card4" src="../cardimages/small/75/hearts-k-75.png"  />
+
+<!--
+<p>
+<em> emphasized text</em>
+<strong> strong text </strong>
+</p>
+-->
+
+</div>
+
+<div id="firstButtons">
+<form>
+<input type="button" value="Move Current Card Right" onclick="moveCardRight(gCurCard,10);" />
+<input type="button" value="Move Current Card Left " onclick="moveCardLeft(gCurCard,10);" />
+<input type="button" value="Move Current Card Up   " onclick="moveCardUp(gCurCard,10);" />
+<input type="button" value="Move Current Card Down " onclick="moveCardDown(gCurCard,10);" />
+</form>
+</div>
+
+<div id="secondButtons">
+<form>
+<input type="button" value="Make Card0 Currrent    " onclick="setCardCurrent(gCard0);" />
+<input type="button" value="Make Card4 Currrent    " onclick="setCardCurrent(gCard4);" />
+<input type="button" value="Swap Card0 n Card4 srcs" onclick="swapCardsSrc(gCard0,gCard4);" />
+</form>
+</div>
+
+<div id="thirdButtons">
+<form>
+<input type="button" value="Start Game" onclick="startGame(this);" />
+</form>
+</div>
+
+</body>
+</html>

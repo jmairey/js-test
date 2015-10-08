@@ -1,0 +1,39 @@
+<html>
+<head>
+
+<title>JavaScript Animation</title>
+      
+<script type="text/javascript">
+<!--
+var imgObj = null;
+  
+function init(){
+  imgObj = document.getElementById('myImage');
+  imgObj.style.position= 'relative'; 
+  imgObj.style.left = '0px'; 
+}
+
+window.onload =init;
+  
+function moveRight(){
+  imgObj.style.left = parseInt(imgObj.style.left) + 10 + 'px';
+}
+
+//-->
+</script>
+      
+</head>
+
+<!-- this is a comment... -->
+
+<body>
+ 
+<img id="myImage" src="../cardimages/small/75/hearts-k-75.png" alt="king of hearts"/>
+
+<form>
+<p>Click button below to move the image to right</p>
+<input type="button" value="Move Right" onclick="moveRight();" />
+</form>
+
+</body>
+</html>

@@ -1,2 +1,9 @@
 *.js~
 .gitignore~
+*.html~
+*~~
+*.css~
+*.sav
+*.sav~
+*.swp
+*.swo

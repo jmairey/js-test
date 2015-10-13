@@ -6,17 +6,27 @@
 <script type="text/javascript">
 <!--
 var imgObj = null;
+var buttonObj = null;
   
 function init(){
   imgObj = document.getElementById('myImage');
   imgObj.style.position= 'relative'; 
   imgObj.style.left = '0px'; 
+
+  buttonObj = document.getElementById('myButton');
+  buttonObj.style.position= 'relative'; 
+  buttonObj.style.left = '0px'; 
 }
 
 window.onload =init;
   
 function moveRight(){
   imgObj.style.left = parseInt(imgObj.style.left) + 10 + 'px';
+}
+
+function moveButtonRight(obj){
+  buttonObj.style.left = parseInt(buttonObj.style.left) + 10 + 'px';
+  console.log (obj);
 }
 
 //-->
@@ -28,12 +38,9 @@ function moveRight(){
 
 <body>
  
-<img id="myImage" src="../cardimages/small/75/hearts-k-75.png" alt="king of hearts"/>
+<img id="myImage" src="../cardimages/small/75/hearts-k-75.png" onclick="moveRight(this);" />
 
-<form>
-<p>Click button below to move the image to right</p>
-<input type="button" value="Move Right" onclick="moveRight();" />
-</form>
+<img id="myButton" src="../cardimages/small/75/hearts-q-75.png" onclick="moveButtonRight();" />
 
 </body>
 </html>

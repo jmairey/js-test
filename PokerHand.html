@@ -66,62 +66,67 @@ var gDeck = [
 52,53,
 ];
 
+gCardValueIndex = 0;
+gCardSuitIndex = 1;
+gCardNameIndex = 2;
+gCardFilenameIndex = 3;
+
 gPrefix = '../cardimages/small/75/';
 gSuffix = '-75.png';
 gDeckData = [
 
 [ 0, 'clubs',    'Ace of Clubs',     gPrefix+'clubs-a'+gSuffix ],
-[ 1, 'clubs',    '2 of Clubs',       gPrefix+'clubs-2'+gSuffix ],
-[ 2, 'clubs',    '3 of Clubs',       gPrefix+'clubs-3'+gSuffix ],
-[ 3, 'clubs',    '4 of Clubs',       gPrefix+'clubs-4'+gSuffix ],
-[ 4, 'clubs',    '5 of Clubs',       gPrefix+'clubs-5'+gSuffix ],
-[ 5, 'clubs',    '6 of Clubs',       gPrefix+'clubs-6'+gSuffix ],
-[ 6, 'clubs',    '7 of Clubs',       gPrefix+'clubs-7'+gSuffix ],
-[ 7, 'clubs',    '8 of Clubs',       gPrefix+'clubs-8'+gSuffix ],
-[ 8, 'clubs',    '9 of Clubs',       gPrefix+'clubs-9'+gSuffix ],
-[ 9, 'clubs',    '10 of Clubs',      gPrefix+'clubs-10'+gSuffix],
+[ 1, 'clubs',    'Two of Clubs',     gPrefix+'clubs-2'+gSuffix ],
+[ 2, 'clubs',    'Three of Clubs',   gPrefix+'clubs-3'+gSuffix ],
+[ 3, 'clubs',    'Four of Clubs',    gPrefix+'clubs-4'+gSuffix ],
+[ 4, 'clubs',    'Five of Clubs',    gPrefix+'clubs-5'+gSuffix ],
+[ 5, 'clubs',    'Six of Clubs',     gPrefix+'clubs-6'+gSuffix ],
+[ 6, 'clubs',    'Seven of Clubs',   gPrefix+'clubs-7'+gSuffix ],
+[ 7, 'clubs',    'Eight of Clubs',   gPrefix+'clubs-8'+gSuffix ],
+[ 8, 'clubs',    'Nine of Clubs',    gPrefix+'clubs-9'+gSuffix ],
+[ 9, 'clubs',    'Ten of Clubs',     gPrefix+'clubs-10'+gSuffix],
 [10, 'clubs',    'Jack of Clubs',    gPrefix+'clubs-j'+gSuffix ],
 [11, 'clubs',    'Queen of Clubs',   gPrefix+'clubs-q'+gSuffix ],
 [12, 'clubs',    'King of Clubs',    gPrefix+'clubs-k'+gSuffix ],
 
 [ 0, 'diamonds', 'Ace of Diamonds',  gPrefix+'diamonds-a'+gSuffix ],
-[ 1, 'diamonds', '2 of Diamonds',    gPrefix+'diamonds-2'+gSuffix ],
-[ 2, 'diamonds', '3 of Diamonds',    gPrefix+'diamonds-3'+gSuffix ],
-[ 3, 'diamonds', '4 of Diamonds',    gPrefix+'diamonds-4'+gSuffix ],
-[ 4, 'diamonds', '5 of Diamonds',    gPrefix+'diamonds-5'+gSuffix ],
-[ 5, 'diamonds', '6 of Diamonds',    gPrefix+'diamonds-6'+gSuffix ],
-[ 6, 'diamonds', '7 of Diamonds',    gPrefix+'diamonds-7'+gSuffix ],
-[ 7, 'diamonds', '8 of Diamonds',    gPrefix+'diamonds-8'+gSuffix ],
-[ 8, 'diamonds', '9 of Diamonds',    gPrefix+'diamonds-9'+gSuffix ],
-[ 9, 'diamonds', '10 of Diamonds',   gPrefix+'diamonds-10'+gSuffix],
+[ 1, 'diamonds', 'Two of Diamonds',  gPrefix+'diamonds-2'+gSuffix ],
+[ 2, 'diamonds', 'Three of Diamonds',gPrefix+'diamonds-3'+gSuffix ],
+[ 3, 'diamonds', 'Four of Diamonds', gPrefix+'diamonds-4'+gSuffix ],
+[ 4, 'diamonds', 'Five of Diamonds', gPrefix+'diamonds-5'+gSuffix ],
+[ 5, 'diamonds', 'Six of Diamonds',  gPrefix+'diamonds-6'+gSuffix ],
+[ 6, 'diamonds', 'Seven of Diamonds',gPrefix+'diamonds-7'+gSuffix ],
+[ 7, 'diamonds', 'Eight of Diamonds',gPrefix+'diamonds-8'+gSuffix ],
+[ 8, 'diamonds', 'Nine of Diamonds', gPrefix+'diamonds-9'+gSuffix ],
+[ 9, 'diamonds', 'Ten of Diamonds',  gPrefix+'diamonds-10'+gSuffix],
 [10, 'diamonds', 'Jack of Diamonds', gPrefix+'diamonds-j'+gSuffix ],
 [11, 'diamonds', 'Queen of Diamonds',gPrefix+'diamonds-q'+gSuffix ],
 [12, 'diamonds', 'King of Diamonds', gPrefix+'diamonds-k'+gSuffix ],
 
 [ 0, 'hearts',   'Ace of Hearts',    gPrefix+'hearts-a'+gSuffix ],
-[ 1, 'hearts',   '2 of Hearts',      gPrefix+'hearts-2'+gSuffix ],
-[ 2, 'hearts',   '3 of Hearts',      gPrefix+'hearts-3'+gSuffix ],
-[ 3, 'hearts',   '4 of Hearts',      gPrefix+'hearts-4'+gSuffix ],
-[ 4, 'hearts',   '5 of Hearts',      gPrefix+'hearts-5'+gSuffix ],
-[ 5, 'hearts',   '6 of Hearts',      gPrefix+'hearts-6'+gSuffix ],
-[ 6, 'hearts',   '7 of Hearts',      gPrefix+'hearts-7'+gSuffix ],
-[ 7, 'hearts',   '8 of Hearts',      gPrefix+'hearts-8'+gSuffix ],
-[ 8, 'hearts',   '9 of Hearts',      gPrefix+'hearts-9'+gSuffix ],
-[ 9, 'hearts',   '10 of Hearts',     gPrefix+'hearts-10'+gSuffix],
+[ 1, 'hearts',   'Two of Hearts',    gPrefix+'hearts-2'+gSuffix ],
+[ 2, 'hearts',   'Three of Hearts',  gPrefix+'hearts-3'+gSuffix ],
+[ 3, 'hearts',   'Four of Hearts',   gPrefix+'hearts-4'+gSuffix ],
+[ 4, 'hearts',   'Five of Hearts',   gPrefix+'hearts-5'+gSuffix ],
+[ 5, 'hearts',   'Six of Hearts',    gPrefix+'hearts-6'+gSuffix ],
+[ 6, 'hearts',   'Seven of Hearts',  gPrefix+'hearts-7'+gSuffix ],
+[ 7, 'hearts',   'Eight of Hearts',  gPrefix+'hearts-8'+gSuffix ],
+[ 8, 'hearts',   'Nine of Hearts',   gPrefix+'hearts-9'+gSuffix ],
+[ 9, 'hearts',   'Ten of Hearts',    gPrefix+'hearts-10'+gSuffix],
 [10, 'hearts',   'Jack of Hearts',   gPrefix+'hearts-j'+gSuffix ],
 [11, 'hearts',   'Queen of Hearts',  gPrefix+'hearts-q'+gSuffix ],
 [12, 'hearts',   'King of Hearts',   gPrefix+'hearts-k'+gSuffix ],
 
 [ 0, 'spades',   'Ace of Spades',    gPrefix+'spades-a'+gSuffix ],
-[ 1, 'spades',   '2 of Spades',      gPrefix+'spades-2'+gSuffix ],
-[ 2, 'spades',   '3 of Spades',      gPrefix+'spades-3'+gSuffix ],
-[ 3, 'spades',   '4 of Spades',      gPrefix+'spades-4'+gSuffix ],
-[ 4, 'spades',   '5 of Spades',      gPrefix+'spades-5'+gSuffix ],
-[ 5, 'spades',   '6 of Spades',      gPrefix+'spades-6'+gSuffix ],
-[ 6, 'spades',   '7 of Spades',      gPrefix+'spades-7'+gSuffix ],
-[ 7, 'spades',   '8 of Spades',      gPrefix+'spades-8'+gSuffix ],
-[ 8, 'spades',   '9 of Spades',      gPrefix+'spades-9'+gSuffix ],
-[ 9, 'spades',   '10 of Spades',     gPrefix+'spades-10'+gSuffix],
+[ 1, 'spades',   'Two of Spades',    gPrefix+'spades-2'+gSuffix ],
+[ 2, 'spades',   'Three of Spades',  gPrefix+'spades-3'+gSuffix ],
+[ 3, 'spades',   'Four of Spades',   gPrefix+'spades-4'+gSuffix ],
+[ 4, 'spades',   'Five of Spades',   gPrefix+'spades-5'+gSuffix ],
+[ 5, 'spades',   'Six of Spades',    gPrefix+'spades-6'+gSuffix ],
+[ 6, 'spades',   'Seven of Spades',  gPrefix+'spades-7'+gSuffix ],
+[ 7, 'spades',   'Eight of Spades',  gPrefix+'spades-8'+gSuffix ],
+[ 8, 'spades',   'Nine of Spades',   gPrefix+'spades-9'+gSuffix ],
+[ 9, 'spades',   'Ten of Spades',    gPrefix+'spades-10'+gSuffix],
 [10, 'spades',   'Jack of Spades',   gPrefix+'spades-j'+gSuffix ],
 [11, 'spades',   'Queen of Spades',  gPrefix+'spades-q'+gSuffix ],
 [12, 'spades',   'King of Spades',   gPrefix+'spades-k'+gSuffix ],
@@ -373,9 +378,11 @@ function handleCard4Click(){
 
 <script type="text/javascript">
 <!--
-// we assume the hand is sorted..
 function analyzeHand(hand,resultElement) {
-  var pair1;
+  // we assume the hand is sorted..
+
+  // using javascript property of variables being undefined by default which is 'falsy'
+  var pair1; // starts out undefined...
   var pair2;
   var pair3;
   var pair4;
@@ -400,7 +407,7 @@ function analyzeHand(hand,resultElement) {
 
   var straightflush;
 
-  var resultText = '';
+  var resultText;
 
   // look for pairs first, then build bottom up from there
   if (gDeckData[hand[0]][0] === gDeckData[hand[1]][0]){
@@ -443,7 +450,7 @@ function analyzeHand(hand,resultElement) {
     triple3 = [ hand[2], hand[3], hand[4] ];
   }
 
-  // full house
+  // full house ?
   if (pair1 && triple3){
     full1 = [ hand[0], hand[1], hand[2], hand[3], hand[4] ];
   }
@@ -451,7 +458,7 @@ function analyzeHand(hand,resultElement) {
     full2 = [ hand[0], hand[1], hand[2], hand[3], hand[4] ];
   }
 
-  // flush
+  // flush ?
   if (gDeckData[hand[0]][1] === gDeckData[hand[1]][1] &&
       gDeckData[hand[1]][1] === gDeckData[hand[2]][1] &&
       gDeckData[hand[2]][1] === gDeckData[hand[3]][1] &&
@@ -459,15 +466,15 @@ function analyzeHand(hand,resultElement) {
     flush = [ hand[0], hand[1], hand[2], hand[3], hand[4] ];
   }
 
-  // straight
+  // straight ?
   if (gDeckData[hand[0]][0] === gDeckData[hand[1]][0] - 1 &&
       gDeckData[hand[1]][0] === gDeckData[hand[2]][0] - 1 &&
       gDeckData[hand[2]][0] === gDeckData[hand[3]][0] - 1 &&
       gDeckData[hand[3]][0] === gDeckData[hand[4]][0] - 1) {
-    flush = [ hand[0], hand[1], hand[2], hand[3], hand[4] ];
+    straight = [ hand[0], hand[1], hand[2], hand[3], hand[4] ];
   }
 
-  // four of a kind
+  // four of a kind ?
   if (pair1 && pair2 && pair3) {
     quad1 = [ hand[0], hand[1], hand[2], hand[3] ];
   }
@@ -475,47 +482,66 @@ function analyzeHand(hand,resultElement) {
     quad2 = [ hand[1], hand[2], hand[3], hand[4] ];
   }
 
-  // straight flush
+  // straight flush ?
   if (straight && flush) {
     straightflush = [ hand[0], hand[1], hand[2], hand[3], hand[4] ];
   }
 
   if (straightflush) {
-    resultText = ' straightflush : XXX ';
+    resultText = 'straightflush';
   } else if (quad1) {
-    resultText = ' four of a kind : XXX ';
+    resultText = 'four of a kind';
   } else if (quad2) {
-    resultText = ' four of a kind : XXX ';
+    resultText = 'four of a kind';
   } else if (straight) {
-    resultText = ' straight : XXX ';
+    resultText = 'straight';
   } else if (straight) {
-    resultText = ' flush : XXX ';
+    resultText = 'flush';
   } else if (full1) {
-    resultText = ' full house : XXX ';
+    resultText = 'full house'
   } else if (full2) {
-    resultText = ' full house : XXX ';
+    resultText = 'full house';
   } else if (triple1) {
-    resultText = ' three of a kind : XXX ';
+    resultText = 'three of a kind: ' + gDeckData[triple1[0]][2] +
+                                ', ' + gDeckData[triple1[1]][2] +
+                                ', ' + gDeckData[triple1[2]][2];
   } else if (triple2) {
-    resultText = ' three of a kind : XXX ';
+    resultText = 'three of a kind: ' + gDeckData[triple2[0]][2] +
+                                ', ' + gDeckData[triple2[1]][2] +
+                                ', ' + gDeckData[triple2[2]][2];
   } else if (triple3) {
-    resultText = ' three of a kind : XXX ';
+    resultText = 'three of a kind: ' + gDeckData[triple3[0]][2] +
+                                ', ' + gDeckData[triple3[1]][2] +
+                                ', ' + gDeckData[triple3[2]][2];
   } else if (twopair1) {
-    resultText = ' two pair : XXX ';
+    resultText = 'two pair : ' + gDeckData[twopair1[0]][2] +
+                          ', ' + gDeckData[twopair1[1]][2] +
+                          ', ' + gDeckData[twopair1[2]][2] +
+                          ', ' + gDeckData[twopair1[3]][2];
   } else if (twopair2) {
-    resultText = ' two pair : XXX ';
+    resultText = 'two pair: ' + gDeckData[twopair2[0]][2] +
+                         ', ' + gDeckData[twopair2[1]][2] +
+                         ', ' + gDeckData[twopair2[2]][2] +
+                         ', ' + gDeckData[twopair2[3]][2];
   } else if (twopair3) {
-    resultText = ' two pair : XXX ';
+    resultText = 'two pair: ' + gDeckData[twopair3[0]][2] +
+                         ', ' + gDeckData[twopair3[1]][2] +
+                         ', ' + gDeckData[twopair3[2]][2] +
+                         ', ' + gDeckData[twopair3[3]][2];
   } else if (pair1) {
-    resultText += ' pair : ' + gDeckData[pair1[0]][2] + ', ' + gDeckData[pair1[1]][2];
+    resultText = 'one pair: ' + gDeckData[pair1[0]][2] + 
+                         ', ' + gDeckData[pair1[1]][2];
   } else if (pair2) {
-    resultText += ' pair : ' + gDeckData[pair2[0]][2] + ', ' + gDeckData[pair2[1]][2];
+    resultText = 'one pair: ' + gDeckData[pair2[0]][2] + 
+                         ', ' + gDeckData[pair2[1]][2];
   } else if (pair3) {
-    resultText += ' pair : ' + gDeckData[pair3[0]][2] + ', ' + gDeckData[pair3[1]][2];
+    resultText = 'one pair: ' + gDeckData[pair3[0]][2] + 
+                         ', ' + gDeckData[pair3[1]][2];
   } else if (pair4) {
-    resultText += ' pair : ' + gDeckData[pair4[0]][2] + ', ' + gDeckData[pair4[1]][2];
+    resultText = 'one pair: ' + gDeckData[pair4[0]][2] + 
+                         ', ' + gDeckData[pair4[1]][2];
   } else {
-    resultText = 'high card: ' + gDeckData[hand[4]][2];
+    resultText = 'single high card: ' + gDeckData[hand[4]][2];
   }
 
   resultElement.innerHTML = resultText;
@@ -604,7 +630,7 @@ input#cardButton0 {
 <div id="player1Cards" class="player1Cards">
 
 <h3 id="player0msg">
-and another hand (yep, letting you see it for now)
+and another hand (yep, allowing it to be seen for now)
 </h3>
 
 <img id="player1card0" src="../cardimages/small/75/back-blue-75-3.png" />

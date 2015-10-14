@@ -66,40 +66,6 @@ var gDeck = [
 52,53,
 ];
 
-function drawCard(hand,index)
-{
-  var cardIndex;
-  var tries = 0;
-  do {
-    cardIndex = Math.floor(Math.random()*gCardsLeftInDeck);
-    hand[index] = gDeck[cardIndex];
-    tries++;
-  } while (hand[index] === -1 && tries < 1000)
-
-
-  //console.log('cardIndex = ', cardIndex);
-  //console.log('tries = ', tries);
-
-  // XXX really should move index out of gDeck and decrement gCardsLeftInDeck
-  gDeck[cardIndex] = -1;
-
-  if  (hand[index] === -1) {
-    hand[index] = 52;   // XXX should not happen. joker
-  }
-
-  return hand[index] < gCardsLeftInDeck;
-}
-
-function cardCompare(a,b) {
-  //console.log('a =',a);
-  //console.log('b =',b);
-
-  return gDeckData[a][0] - gDeckData[b][0];
-}
-
-  
-function init(){
-
 gPrefix = '../cardimages/small/75/';
 gSuffix = '-75.png';
 gDeckData = [
@@ -165,26 +131,43 @@ gDeckData = [
 
 ];
 
+function drawCard(hand)
+{
+  var cardIndex = Math.floor(Math.random()*gCardsLeftInDeck);
+
+  if (cardIndex === gCardsLeftInDeck) {
+    hand.push(52); // joker. should never happen
+  } else {
+    hand.push(gDeck.splice(cardIndex,1)[0]);
+    gCardsLeftInDeck -= 1;
+  }
+
+  //console.log('cardIndex = ', cardIndex);
+  //console.log('hand = ', hand);
+
+}
+
+function cardCompare(a,b) {
+  //console.log('a =',a);
+  //console.log('b =',b);
+
+  return gDeckData[a][0] - gDeckData[b][0];
+}
+
+function init(){
+
 
   var img;
 
-  drawCard(gHand0,0);
-  drawCard(gHand1,0);
-
-  drawCard(gHand0,1);
-  drawCard(gHand1,1);
-
-  drawCard(gHand0,2);
-  drawCard(gHand1,2);
-
-  drawCard(gHand0,3);
-  drawCard(gHand1,3);
-
-  drawCard(gHand0,4);
-  drawCard(gHand1,4);
+  var i;
+  for (i = 0; i < 5; i++) {
+    drawCard(gHand0);
+    drawCard(gHand1);
+  }
 
   gHand0.sort(cardCompare);
   gHand1.sort(cardCompare);
+
   //console.log(gHand0);
   //console.log(gHand1);
 
@@ -621,7 +604,7 @@ input#cardButton0 {
 <div id="player1Cards" class="player1Cards">
 
 <h3 id="player0msg">
-and the computer's hand (yep, letting you cheat for now)
+and another hand (yep, letting you see it for now)
 </h3>
 
 <img id="player1card0" src="../cardimages/small/75/back-blue-75-3.png" />

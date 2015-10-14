@@ -21,12 +21,13 @@ body
     outline-style: groove;
 
 
-    margin-top: 75px;
-    margin-bottom: 75px;
+    margin-top: 15px;
+    margin-bottom: 15px;
 
-    padding-left: 75px;
-    padding-top: 75px;
-    padding-bottom: 75px;
+    padding-left: 45px;
+    padding-right: 45px;
+    padding-top: 45px;
+    padding-bottom: 45px;
   }
 </style>
 
@@ -52,8 +53,8 @@ var gPlayer0Cards;
 var gDeckData;
 var gCardsLeftInDeck=52;
 
-var gHand0 = [-1,-1,-1,-1,-1];
-var gHand1 = [-1,-1,-1,-1,-1];
+var gHand0 = [];
+var gHand1 = [];
 
 var gDiscards = [];
 
@@ -459,6 +460,43 @@ function analyzeHand(hand,resultElement) {
     triple3 = [ hand[2], hand[3], hand[4] ];
   }
 
+  // full house
+  if (pair1 && triple3){
+    full1 = [ hand[0], hand[1], hand[2], hand[3], hand[4] ];
+  }
+  if (triple1 && pair4){
+    full2 = [ hand[0], hand[1], hand[2], hand[3], hand[4] ];
+  }
+
+  // flush
+  if (gDeckData[hand[0]][1] === gDeckData[hand[1]][1] &&
+      gDeckData[hand[1]][1] === gDeckData[hand[2]][1] &&
+      gDeckData[hand[2]][1] === gDeckData[hand[3]][1] &&
+      gDeckData[hand[3]][1] === gDeckData[hand[4]][1]) {
+    flush = [ hand[0], hand[1], hand[2], hand[3], hand[4] ];
+  }
+
+  // straight
+  if (gDeckData[hand[0]][0] === gDeckData[hand[1]][0] - 1 &&
+      gDeckData[hand[1]][0] === gDeckData[hand[2]][0] - 1 &&
+      gDeckData[hand[2]][0] === gDeckData[hand[3]][0] - 1 &&
+      gDeckData[hand[3]][0] === gDeckData[hand[4]][0] - 1) {
+    flush = [ hand[0], hand[1], hand[2], hand[3], hand[4] ];
+  }
+
+  // four of a kind
+  if (pair1 && pair2 && pair3) {
+    quad1 = [ hand[0], hand[1], hand[2], hand[3] ];
+  }
+  if (pair2 && pair3 && pair4) {
+    quad2 = [ hand[1], hand[2], hand[3], hand[4] ];
+  }
+
+  // straight flush
+  if (straight && flush) {
+    straightflush = [ hand[0], hand[1], hand[2], hand[3], hand[4] ];
+  }
+
   if (straightflush) {
     resultText = ' straightflush : XXX ';
   } else if (quad1) {
@@ -547,10 +585,10 @@ here's your poker hand...
 
 <div id="firstButtons">
 <form>
-<input type="button" value="Move Current Card Left " onclick="moveCardLeft(gCurCard,10);" />
-<input type="button" value="Move Current Card Right" onclick="moveCardRight(gCurCard,10);" />
-<input type="button" value="Move Current Card Up   " onclick="moveCardUp(gCurCard,10);" />
-<input type="button" value="Move Current Card Down " onclick="moveCardDown(gCurCard,10);" />
+<input type="button" value="Move Card Left " onclick="moveCardLeft(gCurCard,10);" />
+<input type="button" value="Move Card Right" onclick="moveCardRight(gCurCard,10);" />
+<input type="button" value="Move Card Up   " onclick="moveCardUp(gCurCard,10);" />
+<input type="button" value="Move Card Down " onclick="moveCardDown(gCurCard,10);" />
 </form>
 </div>
 

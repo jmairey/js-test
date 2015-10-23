@@ -13,6 +13,10 @@
       UP: 38,
       RIGHT: 39,
       DOWN: 40,
+      j: 74,
+      k: 75,
+      h: 72,
+      l:76,
 
       isDown: function(keyCode) {
         return this._pressed[keyCode];
@@ -120,9 +124,13 @@
     
     Player.prototype.update = function() {
       if (Key.isDown(Key.UP)) this.moveUp();
+      if (Key.isDown(Key.k)) this.moveUp();
       if (Key.isDown(Key.LEFT)) this.moveLeft();
+      if (Key.isDown(Key.h)) this.moveLeft();
       if (Key.isDown(Key.DOWN)) this.moveDown();
+      if (Key.isDown(Key.j)) this.moveDown();
       if (Key.isDown(Key.RIGHT)) this.moveRight();
+      if (Key.isDown(Key.l)) this.moveRight();
     };
     </script>
   </head>

@@ -124,14 +124,19 @@
       Game.player = new Player();
 
       var requestAnimationFrame = window.requestAnimationFrame;
-      //requestAnimationFrame = undefined;
+      var animationRequest;
       if (requestAnimationFrame) {
-        var cb = function() { runGame(); requestAnimationFrame(cb); }
-        cb();
+        var cb = function() { runGame(); return requestAnimationFrame(cb); }
+        animationRequest = cb();
       } else {
-        setInterval(runGame, Game.interval);
+        setInterval(runGame, Game.interval); // old school way of doing this
+      }
+
+      if (animationRequest) {
+        //window.cancelAnimationFrame(animationRequest);
       }
     }
+
 
     </script>
   </head>

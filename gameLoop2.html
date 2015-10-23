@@ -45,24 +45,13 @@
       height: 600,
     };
 
-    /*
-    Game._onEachFrame = (function() {
-      return function(cb) {
-        setInterval(cb, Game.interval);
-      }
-    })
-    ();  // argument is a function that is invoked and 
-         // returns a function that takes a callback and passes it to 
-         // setInterval to run our gameloop... tricky!
-         */
-
-    var gNextGameTick = (new Date).getTime();
+    var gNextGameTick = performance.now();
     
     function runGame() {
 
       var loops = 0;
 
-      while ((new Date).getTime() > gNextGameTick) {
+      while (performance.now() > gNextGameTick) {
         updateGame();
         gNextGameTick += Game.interval;
         loops++;
@@ -134,7 +123,14 @@
 
       Game.player = new Player();
 
-      setInterval(runGame, Game.interval);
+      var requestAnimationFrame = window.requestAnimationFrame;
+      //requestAnimationFrame = undefined;
+      if (requestAnimationFrame) {
+        var cb = function() { runGame(); requestAnimationFrame(cb); }
+        cb();
+      } else {
+        setInterval(runGame, Game.interval);
+      }
     }
 
     </script>

@@ -64,7 +64,7 @@
     }
     
     function drawGame() {
-      //Game.context.clearRect(0, 0, Game.width, Game.height);
+      Game.context.clearRect(0, 0, Game.width, Game.height);
       Game.player.draw(Game.context);
     }
     
@@ -77,10 +77,12 @@
       this.y = Game.height/4;
       this.width = 16;
       this.height = 16;
+      this.img = document.getElementById("card0");
     }
 
     Player.prototype.draw = function(context) {
       context.fillRect(this.x, this.y, this.width, this.height);
+      context.drawImage(this.img,this.x,this.y);
     };
 
     Player.prototype.moveLeft = function() {
@@ -141,6 +143,9 @@
     </script>
   </head>
   <body onload="startGame()">
-  <p> some text </p>
+    <div style="display:none;">
+      <p> some text </p>
+      <img id="card0" src="../cardimages/small/75/back-blue-75-3.png" />
+    </div>
   </body>
 </html>

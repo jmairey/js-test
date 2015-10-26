@@ -2,6 +2,10 @@
 <html>
 <head>
 
+    <style type="text/css" media="screen">
+      canvas { border: 1px solid; }
+    </style>
+
 <link rel="stylesheet" type="text/css" href="PokerHand.css">
 <!-- in line version of style sheet
 <style type="text/css">
@@ -663,13 +667,17 @@ computer hand analysis
     border-right-style: none;
     border: 0px;
 }
-
 </style>
+
 <div id="fourthButtons">
-<button id = "cardButton1" onclick="startGame(this);"  >
-<img src="../cardimages/small/75/back-red-75-3.png"  />
-</button>
+    <button id = "cardButton1" onclick="startGame(this);"  >
+        <img src="../cardimages/small/75/back-red-75-3.png"  />
+    </button>
+
+    <canvas id="pokerCanvas" width="320" height="240">
+    </canvas>
 </div>
+
 
 
 </body>

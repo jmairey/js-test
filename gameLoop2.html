@@ -81,24 +81,32 @@
     }
 
     Player.prototype.draw = function(context) {
-      context.fillRect(this.x, this.y, this.width, this.height);
       context.drawImage(this.img,this.x,this.y);
+      //context.fillRect(this.x, this.y, this.width, this.height);
     };
 
     Player.prototype.moveLeft = function() {
-      this.x -= 1;
+      if (this.x > 0) {
+        this.x -= 1;
+      }
     };
 
     Player.prototype.moveRight = function() {
-      this.x += 1;
+      if (this.x < Game.canvas.width - this.img.width) {
+        this.x += 1;
+      }
     };
 
     Player.prototype.moveUp = function() {
-      this.y -= 1;
+      if (this.y > 0) {
+        this.y -= 1;
+      }
     };
 
     Player.prototype.moveDown = function() {
-      this.y += 1;
+      if (this.y < Game.canvas.height - this.img.height) {
+        this.y += 1;
+      }
     };
     
     Player.prototype.update = function() {

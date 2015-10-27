@@ -156,29 +156,51 @@ function drawCard(hand)
 
 }
 
-function cardCompare(a,b) {
-  //console.log('a =',a);
-  //console.log('b =',b);
+function discardHand(hand)
+{
+  var cardsInHand = hand.length;
 
+  gDiscards.splice(0,0,hand[0],hand[1],hand[2],hand[3],hand[4]);
+  hand.pop(); hand.pop(); hand.pop(); hand.pop(); hand.pop();
+
+}
+
+function returnDiscards() {
+  var i;
+  for (i = 0; i < gDiscards.length; i++) {
+    gDeck.splice(0,0,gDiscards[i]);
+    gCardsLeftInDeck += 1;
+  }
+  gDiscards = [];
+
+  gDeck.sort(indexCompare);
+}
+
+function cardCompare(a,b) {
   return gDeckData[a][0] - gDeckData[b][0];
 }
 
-function init(){
-
-
-  var img;
-
+function deal(hand0, hand1){
+  //console.log("gDeck = ",gDeck);
   var i;
   for (i = 0; i < 5; i++) {
-    drawCard(gHand0);
-    drawCard(gHand1);
+    drawCard(hand0);
+    drawCard(hand1);
   }
 
-  gHand0.sort(cardCompare);
-  gHand1.sort(cardCompare);
+  hand0.sort(cardCompare);
+  hand1.sort(cardCompare);
 
-  //console.log(gHand0);
-  //console.log(gHand1);
+  //console.log(hand0);
+  //console.log(hand1);
+
+  //console.log("gDeck = ",gDeck);
+}
+
+function init(){
+  var img;
+
+  deal(gHand0, gHand1);
 
   img = document.getElementById('card0');
   img.style.position= 'relative'; 
@@ -221,6 +243,7 @@ function init(){
 
   gPlayer0Cards = document.getElementById('player0Cards');
 
+  /*
   img = document.getElementById('player1card0');
   img.src = gDeckData[gHand1[0]][3];
 
@@ -235,42 +258,10 @@ function init(){
 
   img = document.getElementById('player1card4');
   img.src = gDeckData[gHand1[4]][3];
-
-  var player0Result = analyzeHand(gHand0);
-  setResultHTML(player0Result,document.getElementById('player0Result'));
-
-  var computerResult = analyzeHand(gHand1);
-  setResultHTML(computerResult,document.getElementById('computerResult'));
-
-  var gameDirections = document.getElementById("gameDirections");
-  if (player0Result.handType === computerResult.handType) {
-    if (player0Result.handRank === computerResult.handRank) {
-      if (player0Result.handRank2 === computerResult.handRank2) {
-        gameDirectionText = 'split the pot?';
-      } else if (player0Result.handRank2 > computerResult.handRank2) {
-        gameDirectionText = 'you won with ' + document.getElementById('player0Result').innerText;
-      } else if (player0Result.handRank2 < computerResult.handRank2) {
-        gameDirectionText = 'you lost against ' + document.getElementById('computerResult').innerText;
-      } else {
-        gameDirectionText = '!!! need to fix a bug in our code to figure out who won...';
-      }
-    } else if (player0Result.handRank > computerResult.handRank) {
-      gameDirectionText = 'you won with ' + document.getElementById('player0Result').innerText;
-    } else if (player0Result.handRank < computerResult.handRank) {
-      gameDirectionText = 'you lost against ' + document.getElementById('computerResult').innerText;
-    } else {
-        gameDirectionText = '!! need to fix a bug in our code to figure out who won...';
-    }
-  } else if (player0Result.handType > computerResult.handType) {
-    gameDirectionText = 'you won with ' + document.getElementById('player0Result').innerText;
-  } else if (player0Result.handType < computerResult.handType) {
-    gameDirectionText = 'you lost against ' + document.getElementById('computerResult').innerText;
-  } else {
-      gameDirectionText = '! need to fix a bug in our code to figure out who won...';
-  }
-  gameDirections.innerHTML = gameDirectionText;
+  */
 
 }
+
 window.onload =init;
 //-->
 </script>
@@ -377,11 +368,112 @@ function swapCardsSrc(cardA,cardB){
 
 <script type="text/javascript">
 <!--
+
+function indexCompare(a,b) {
+  return a - b;
+}
+
 function startGame(buttonObj){
   //alert(buttonObj.type);
   //alert(buttonObj.value);
   var response = prompt('really ready to start game?', 'yes');
   //alert(response);
+  var img;
+
+  img = document.getElementById('card0');
+  img.style.position= 'relative'; 
+  img.style.left = '0px'; 
+  img.style.bottom = '0px'; 
+  img.src = gDeckData[gHand0[0]][3];
+  gCard0 = img;
+
+  img = document.getElementById('card1');
+  img.style.position= 'relative'; 
+  img.style.left = '0px'; 
+  img.style.bottom = '0px'; 
+  img.src = gDeckData[gHand0[1]][3];
+  gCard1 = img;
+
+  img = document.getElementById('card2');
+  img.style.position= 'relative'; 
+  img.style.left = '0px'; 
+  img.style.bottom = '0px'; 
+  img.src = gDeckData[gHand0[2]][3];
+  gCard2 = img;
+
+  img = document.getElementById('card3');
+  img.style.position= 'relative'; 
+  img.style.left = '0px'; 
+  img.style.bottom = '0px'; 
+  img.src = gDeckData[gHand0[3]][3];
+  gCard3 = img;
+
+  img = document.getElementById('card4');
+  img.style.position= 'relative'; 
+  img.style.left = '0px'; 
+  img.style.bottom = '0px'; 
+  img.src = gDeckData[gHand0[4]][3];
+  gCard4 = img;
+
+  setCardCurrent(gCard0);
+
+  img = document.getElementById('player1card0');
+  img.src = gDeckData[gHand1[0]][3];
+
+  img = document.getElementById('player1card1');
+  img.src = gDeckData[gHand1[1]][3]
+
+  img = document.getElementById('player1card2');
+  img.src = gDeckData[gHand1[2]][3];
+
+  img = document.getElementById('player1card3');
+  img.src = gDeckData[gHand1[3]][3];
+
+  img = document.getElementById('player1card4');
+  img.src = gDeckData[gHand1[4]][3];
+
+  var player0Result = analyzeHand(gHand0);
+  setResultHTML(player0Result,document.getElementById('player0Result'));
+
+  var computerResult = analyzeHand(gHand1);
+  setResultHTML(computerResult,document.getElementById('computerResult'));
+
+  var gameDirections = document.getElementById("gameDirections");
+  if (player0Result.handType === computerResult.handType) {
+    if (player0Result.handRank === computerResult.handRank) {
+      if (player0Result.handRank2 === computerResult.handRank2) {
+        gameDirectionText = 'split the pot?';
+      } else if (player0Result.handRank2 > computerResult.handRank2) {
+        gameDirectionText = 'you won with ' + document.getElementById('player0Result').innerText;
+      } else if (player0Result.handRank2 < computerResult.handRank2) {
+        gameDirectionText = 'you lost against ' + document.getElementById('computerResult').innerText;
+      } else {
+        gameDirectionText = '!!! need to fix a bug in our code to figure out who won...';
+      }
+    } else if (player0Result.handRank > computerResult.handRank) {
+      gameDirectionText = 'you won with ' + document.getElementById('player0Result').innerText;
+    } else if (player0Result.handRank < computerResult.handRank) {
+      gameDirectionText = 'you lost against ' + document.getElementById('computerResult').innerText;
+    } else {
+        gameDirectionText = '!! need to fix a bug in our code to figure out who won...';
+    }
+  } else if (player0Result.handType > computerResult.handType) {
+    gameDirectionText = 'you won with ' + document.getElementById('player0Result').innerText;
+  } else if (player0Result.handType < computerResult.handType) {
+    gameDirectionText = 'you lost against ' + document.getElementById('computerResult').innerText;
+  } else {
+      gameDirectionText = '! need to fix a bug in our code to figure out who won...';
+  }
+  gameDirections.innerHTML = gameDirectionText;
+
+  discardHand(gHand0);
+
+  discardHand(gHand1);
+
+  returnDiscards();
+
+
+  deal(gHand0, gHand1);
 }
 //-->
 </script>
@@ -661,7 +753,7 @@ function setResultHTML(result,resultElement) {
 <body>
 
 <h2 id="gameDirections"> 
-here's your poker hand... aces low
+here's your poker hand... aces low. click red card to start
 </h2>
 
 <!--

@@ -638,7 +638,7 @@ function analyzeHand(hand){
     result.handType = 6;
     result.handRank = gDeckData[hand[2]][0];
     result.handRank2 = gDeckData[hand[0]][0];
-    result.card0 = hand[0];   // could just do triple first, and for 2 pair, always high pair first
+    result.card0 = hand[0]; 
     result.card1 = hand[1];
     result.card2 = hand[2];
     result.card3 = hand[3];
@@ -648,7 +648,7 @@ function analyzeHand(hand){
     result.handType = 6;
     result.handRank = gDeckData[hand[0]][0];
     result.handRank2 = gDeckData[hand[3]][0];
-    result.card0 = hand[0];   // could just do triple first, and for 2 pair, always high pair first
+    result.card0 = hand[0]; 
     result.card1 = hand[1];
     result.card2 = hand[2];
     result.card3 = hand[3];
@@ -663,7 +663,24 @@ function analyzeHand(hand){
     straight = true;
     result.handType = 4;
     result.handRank = gDeckData[hand[4]][0];
-    result.card0 = hand[0];   // start with highest value card?
+    result.handRank2 = gDeckData[hand[3]][0];
+    result.card0 = hand[0];  
+    result.card1 = hand[1];
+    result.card2 = hand[2];
+    result.card3 = hand[3];
+    result.card4 = hand[4];
+  }
+  // ace low straight
+  if (gDeckData[hand[0]][0] === 13 &&
+      gDeckData[hand[1]][0] ===  1 &&
+      gDeckData[hand[2]][0] ===  2 &&
+      gDeckData[hand[3]][0] ===  3 &&
+      gDeckData[hand[4]][0] ===  4) {
+    straight = true;
+    result.handType = 4;
+    result.handRank = gDeckData[hand[0]][0];
+    result.handRank2 = gDeckData[hand[4]][0];
+    result.card0 = hand[0]; 
     result.card1 = hand[1];
     result.card2 = hand[2];
     result.card3 = hand[3];
@@ -720,11 +737,11 @@ function setResultHTML(result,resultElement) {
   } else if (result.handType === 7) {
     resultText = 'four of a kind';
   } else if (result.handType === 6) {
-    resultText = 'straight';
+    resultText = 'full house';
   } else if (result.handType === 5) {
     resultText = 'flush';
   } else if (result.handType === 4) {
-    resultText = 'full house';
+    resultText = 'straight';
   } else if (result.handType === 3) {
     resultText = 'three of a kind: ' + gDeckData[result.card0][2] +
                                 ', ' + gDeckData[result.card1][2] +

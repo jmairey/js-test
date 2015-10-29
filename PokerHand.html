@@ -212,95 +212,106 @@ function redCardBack(buttonObj) {
 function anteAndDealHands(buttonObj) {
   //alert(buttonObj.value);
 
-  discardHand(gHand0);
-  discardHand(gHand1);
+  if (gGameState.state === -1) {
+    discardHand(gHand0);
+    discardHand(gHand1);
 
-  returnDiscards();
+    returnDiscards();
 
-  deal(gHand0, gHand1);
+    deal(gHand0, gHand1);
 
-  resetCardPositions();
+    resetCardPositions();
 
-  var gameDirections = document.getElementById("gameDirections");
-  var gameDirectionsText = "select cards to discard then hit Call or Fold..."
-  gGameState.pot += 2*5; // two players ante
-  gGameState.wallet -= 5;
-  gameDirectionsText += 'wallet ' + gGameState.wallet + ' pot ' + gGameState.pot;
-  gameDirections.innerHTML = gameDirectionsText;
+    var gameDirections = document.getElementById("gameDirections");
+    var gameDirectionsText = "select cards to discard then hit Call or Fold..."
+    gGameState.pot = 2*5; // two players ante
+    gGameState.wallet -= 5;
+    gameDirectionsText += 'wallet ' + gGameState.wallet + ' pot ' + gGameState.pot;
+    gameDirections.innerHTML = gameDirectionsText;
 
-  document.getElementById('player0Result').innerHTML = "your hand analysis "
-  document.getElementById('computerResult').innerHTML = "computer hand analysis "
+    document.getElementById('player0Result').innerHTML = "your hand analysis "
+    document.getElementById('computerResult').innerHTML = "computer hand analysis "
+
+    gGameState.state = 2;
+  }
 }
 
 function discardCurrentCard(buttonObj) {
   //alert(buttonObj.value);
-  if (gCurCard) {
-    if        (gCurCard === gCard0) {
-      //alert("discard Card 0");
-      if (gHand0[0] < 52) {
-        gCard0.src = "../cardimages/small/75/back-blue-75-3.png";
-        gDiscards.push(gHand0[0]);
-        gHand0[0] = 52;
-      }
-    } else if (gCurCard === gCard1) {
-      //alert("discard Card 1");
-      if (gHand0[1] < 52) {
-        gCard1.src = "../cardimages/small/75/back-blue-75-3.png";
-        gDiscards.push(gHand0[1]);
-        gHand0[1] = 52;
-      }
-    } else if (gCurCard === gCard2) {
-      //alert("discard Card 2");
-      if (gHand0[2] < 52) {
-        gCard2.src = "../cardimages/small/75/back-blue-75-3.png";
-        gDiscards.push(gHand0[2]);
-        gHand0[2] = 52;
-      }
-    } else if (gCurCard === gCard3) {
-      //alert("discard Card 3");
-      if (gHand0[3] < 52) {
-        gCard3.src = "../cardimages/small/75/back-blue-75-3.png";
-        gDiscards.push(gHand0[3]);
-        gHand0[3] = 52;
-      }
-    } else if (gCurCard === gCard4) {
-      //alert("discard Card 4");
-      if (gHand0[4] < 52) {
-        gCard4.src = "../cardimages/small/75/back-blue-75-3.png";
-        gDiscards.push(gHand0[4]);
-        gHand0[4] = 52;
+  if (gGameState.state === 2 || gGameState.state === 1) {
+    if (gCurCard) {
+      if        (gCurCard === gCard0) {
+        //alert("discard Card 0");
+        if (gHand0[0] < 52) {
+          gCard0.src = "../cardimages/small/75/back-blue-75-3.png";
+          gDiscards.push(gHand0[0]);
+          gHand0[0] = 52;
+        }
+      } else if (gCurCard === gCard1) {
+        //alert("discard Card 1");
+        if (gHand0[1] < 52) {
+          gCard1.src = "../cardimages/small/75/back-blue-75-3.png";
+          gDiscards.push(gHand0[1]);
+          gHand0[1] = 52;
+        }
+      } else if (gCurCard === gCard2) {
+        //alert("discard Card 2");
+        if (gHand0[2] < 52) {
+          gCard2.src = "../cardimages/small/75/back-blue-75-3.png";
+          gDiscards.push(gHand0[2]);
+          gHand0[2] = 52;
+        }
+      } else if (gCurCard === gCard3) {
+        //alert("discard Card 3");
+        if (gHand0[3] < 52) {
+          gCard3.src = "../cardimages/small/75/back-blue-75-3.png";
+          gDiscards.push(gHand0[3]);
+          gHand0[3] = 52;
+        }
+      } else if (gCurCard === gCard4) {
+        //alert("discard Card 4");
+        if (gHand0[4] < 52) {
+          gCard4.src = "../cardimages/small/75/back-blue-75-3.png";
+          gDiscards.push(gHand0[4]);
+          gHand0[4] = 52;
+        }
       }
     }
+    gGameState.state = 1;
   }
 }
 
 function doneDiscard(buttonObj) {
   //alert(buttonObj.value);
 
-  returnDiscards();
+  if (gGameState.state === 1) {
+    returnDiscards();
 
-  var i;
-  var cardIndex;
-  for (i = 0; i < 5; i++) {
-    if (gHand0[i] === 52) {
-      cardIndex = Math.floor(Math.random()*gCardsLeftInDeck);
+    var i;
+    var cardIndex;
+    for (i = 0; i < 5; i++) {
+      if (gHand0[i] === 52) {
+        cardIndex = Math.floor(Math.random()*gCardsLeftInDeck);
 
-      if (cardIndex !== gCardsLeftInDeck) {
-        gHand0[i] = gDeck.splice(cardIndex,1)[0];
-        gCardsLeftInDeck -= 1;
+        if (cardIndex !== gCardsLeftInDeck) {
+          gHand0[i] = gDeck.splice(cardIndex,1)[0];
+          gCardsLeftInDeck -= 1;
+        }
       }
     }
+
+    gHand0.sort(cardCompare);
+
+    resetCardPositions();
+
+    gGameState.state = 2;
+
+    //console.log('deck = ', gDeck);
+    //console.log('hand0 = ', gHand0);
+    //console.log('hand1 = ', gHand1);
+
+    // should assert that ghand0, ghand1 and gDeck make a complete deck?
   }
-
-  gHand0.sort(cardCompare);
-
-  resetCardPositions();
-
-  //console.log('deck = ', gDeck);
-  //console.log('hand0 = ', gHand0);
-  //console.log('hand1 = ', gHand1);
-
-  // should assert that ghand0, ghand1 and gDeck make a complete deck?
 }
 
 function foldHand(buttonObj) {
@@ -359,26 +370,27 @@ window.onload =init;
 <script type="text/javascript">
 <!--
 function moveCardLeft(img,incr){
-  var imgOffsetLeft = img.offsetLeft;
-  var player0CardsOffsetLeft = gPlayer0Cards.offsetLeft;
+  if (img) {
+    var imgOffsetLeft = img.offsetLeft;
+    var player0CardsOffsetLeft = gPlayer0Cards.offsetLeft;
 
-  //var imgClientLeft = img.clientLeft;
-  //var player0CardsClientLeft = gPlayer0Cards.clientLeft;
-  //console.log('img       offsetLeft:',imgOffsetLeft);
-  //console.log('container offsetLeft:',player0CardsOffsetLeft);
-  //console.log('img       clientLeft:',imgClientLeft);
-  //console.log('container clientLeft:',player0CardsClientLeft);
+    //var imgClientLeft = img.clientLeft;
+    //var player0CardsClientLeft = gPlayer0Cards.clientLeft;
+    //console.log('img       offsetLeft:',imgOffsetLeft);
+    //console.log('container offsetLeft:',player0CardsOffsetLeft);
+    //console.log('img       clientLeft:',imgClientLeft);
+    //console.log('container clientLeft:',player0CardsClientLeft);
 
-  var left = parseInt(img.style.left);
+    var left = parseInt(img.style.left);
 
-  if (imgOffsetLeft > player0CardsOffsetLeft+incr) {
-      left -= incr;
-      //console.log('img left:',left);
-      img.style.left = left + 'px';
-  } else {
-    /*console.log('movement left halted')*/;
+    if (imgOffsetLeft > player0CardsOffsetLeft+incr) {
+        left -= incr;
+        //console.log('img left:',left);
+        img.style.left = left + 'px';
+    } else {
+      /*console.log('movement left halted')*/;
+    }
   }
-
 }
 //-->
 </script>
@@ -386,16 +398,18 @@ function moveCardLeft(img,incr){
 <script type="text/javascript">
 <!--
 function moveCardUp(img,incr){
-  var imgOffsetTop = img.offsetTop;
-  var player0CardsOffsetTop = gPlayer0Cards.offsetTop;
+  if (img) {
+    var imgOffsetTop = img.offsetTop;
+    var player0CardsOffsetTop = gPlayer0Cards.offsetTop;
 
-  var bottom = parseInt(img.style.bottom);
+    var bottom = parseInt(img.style.bottom);
 
-  if (imgOffsetTop > player0CardsOffsetTop + incr) {
-      bottom += incr;
-      img.style.bottom = bottom + 'px';
-  } else {
-    /*console.log('movement up halted')*/;
+    if (imgOffsetTop > player0CardsOffsetTop + incr) {
+        bottom += incr;
+        img.style.bottom = bottom + 'px';
+    } else {
+      /*console.log('movement up halted')*/;
+    }
   }
 }
 //-->
@@ -404,24 +418,26 @@ function moveCardUp(img,incr){
 <script type="text/javascript">
 <!--
 function moveCardDown(img,incr){
-  var imgOffsetTop = img.offsetTop;
-  var imgHeight    = img.offsetHeight;
-  var imgOffsetBottom = imgOffsetTop + imgHeight;
+  if (img) {
+    var imgOffsetTop = img.offsetTop;
+    var imgHeight    = img.offsetHeight;
+    var imgOffsetBottom = imgOffsetTop + imgHeight;
 
-  var player0CardsOffsetTop = gPlayer0Cards.offsetTop;
-  var player0CardsOffsetHeight = gPlayer0Cards.offsetHeight;
-  var player0CardsOffsetBottom = player0CardsOffsetTop + player0CardsOffsetHeight;
+    var player0CardsOffsetTop = gPlayer0Cards.offsetTop;
+    var player0CardsOffsetHeight = gPlayer0Cards.offsetHeight;
+    var player0CardsOffsetBottom = player0CardsOffsetTop + player0CardsOffsetHeight;
 
-  //console.log('img       offsetBottom:',imgOffsetBottom);
-  //console.log('container offsetBottom:',player0CardsOffsetBottom);
+    //console.log('img       offsetBottom:',imgOffsetBottom);
+    //console.log('container offsetBottom:',player0CardsOffsetBottom);
 
-  var bottom = parseInt(img.style.bottom);
+    var bottom = parseInt(img.style.bottom);
 
-  if (imgOffsetBottom < player0CardsOffsetBottom - incr) {
-      bottom -= incr;
-      img.style.bottom = bottom + 'px';
-  } else {
-    /*console.log('movement down halted')*/;
+    if (imgOffsetBottom < player0CardsOffsetBottom - incr) {
+        bottom -= incr;
+        img.style.bottom = bottom + 'px';
+    } else {
+      /*console.log('movement down halted')*/;
+    }
   }
 }
 //-->
@@ -467,31 +483,41 @@ function resetCardPositions() {
   img.style.position= 'relative'; 
   img.style.left = '0px'; 
   img.style.bottom = '0px'; 
-  img.src = gDeckData[gHand0[0]][3];
+  if (gHand0) {
+    img.src = gDeckData[gHand0[0]][3];
+  }
 
   img = document.getElementById('card1');
   img.style.position= 'relative'; 
   img.style.left = '0px'; 
   img.style.bottom = '0px'; 
-  img.src = gDeckData[gHand0[1]][3];
+  if (gHand0) {
+    img.src = gDeckData[gHand0[1]][3];
+  }
 
   img = document.getElementById('card2');
   img.style.position= 'relative'; 
   img.style.left = '0px'; 
   img.style.bottom = '0px'; 
-  img.src = gDeckData[gHand0[2]][3];
+  if (gHand0) {
+    img.src = gDeckData[gHand0[2]][3];
+  }
 
   img = document.getElementById('card3');
   img.style.position= 'relative'; 
   img.style.left = '0px'; 
   img.style.bottom = '0px'; 
-  img.src = gDeckData[gHand0[3]][3];
+  if (gHand0) {
+    img.src = gDeckData[gHand0[3]][3];
+  }
 
   img = document.getElementById('card4');
   img.style.position= 'relative'; 
   img.style.left = '0px'; 
   img.style.bottom = '0px'; 
-  img.src = gDeckData[gHand0[4]][3];
+  if (gHand0) {
+    img.src = gDeckData[gHand0[4]][3];
+  }
 
   img = document.getElementById('player1card0');
   //img.src = "../cardimages/small/75/back-blue-75-3.png";
@@ -522,53 +548,56 @@ function callGame(buttonObj){
   //var response = prompt('really ready to start game?', 'yes');
   //alert(response);
 
-  resetCardPositions();
+  if (gGameState.state === 2) {
+    resetCardPositions();
 
-  var player0Result = analyzeHand(gHand0);
-  setResultHTML(player0Result,document.getElementById('player0Result'));
+    var player0Result = analyzeHand(gHand0);
+    setResultHTML(player0Result,document.getElementById('player0Result'));
 
-  var computerResult = analyzeHand(gHand1);
-  setResultHTML(computerResult,document.getElementById('computerResult'));
+    var computerResult = analyzeHand(gHand1);
+    setResultHTML(computerResult,document.getElementById('computerResult'));
 
-  var gameDirections = document.getElementById("gameDirections");
-  if (player0Result.handType === computerResult.handType) {
-    if (player0Result.handRank === computerResult.handRank) {
-      if (player0Result.handRank2 === computerResult.handRank2) {
-        gameDirectionText = 'split the pot...';
-        gGameState.wallet += gGameState.pot/2;
-        gGameState.pot = 0; 
-      } else if (player0Result.handRank2 > computerResult.handRank2) {
+    var gameDirections = document.getElementById("gameDirections");
+    if (player0Result.handType === computerResult.handType) {
+      if (player0Result.handRank === computerResult.handRank) {
+        if (player0Result.handRank2 === computerResult.handRank2) {
+          gameDirectionText = 'split the pot...';
+          gGameState.wallet += gGameState.pot/2;
+          gGameState.pot = 0; 
+        } else if (player0Result.handRank2 > computerResult.handRank2) {
+          gameDirectionText = 'you won with ' + document.getElementById('player0Result').innerText;
+          gGameState.wallet += gGameState.pot;
+          gGameState.pot = 0; 
+        } else if (player0Result.handRank2 < computerResult.handRank2) {
+          gameDirectionText = 'you lost against ' + document.getElementById('computerResult').innerText;
+          gGameState.pot = 0; 
+        } else {
+          gameDirectionText = '!!! need to fix a bug in our code to figure out who won...';
+        }
+      } else if (player0Result.handRank > computerResult.handRank) {
         gameDirectionText = 'you won with ' + document.getElementById('player0Result').innerText;
         gGameState.wallet += gGameState.pot;
         gGameState.pot = 0; 
-      } else if (player0Result.handRank2 < computerResult.handRank2) {
+      } else if (player0Result.handRank < computerResult.handRank) {
         gameDirectionText = 'you lost against ' + document.getElementById('computerResult').innerText;
         gGameState.pot = 0; 
       } else {
-        gameDirectionText = '!!! need to fix a bug in our code to figure out who won...';
+          gameDirectionText = '!! need to fix a bug in our code to figure out who won...';
       }
-    } else if (player0Result.handRank > computerResult.handRank) {
+    } else if (player0Result.handType > computerResult.handType) {
       gameDirectionText = 'you won with ' + document.getElementById('player0Result').innerText;
       gGameState.wallet += gGameState.pot;
       gGameState.pot = 0; 
-    } else if (player0Result.handRank < computerResult.handRank) {
+    } else if (player0Result.handType < computerResult.handType) {
       gameDirectionText = 'you lost against ' + document.getElementById('computerResult').innerText;
       gGameState.pot = 0; 
     } else {
-        gameDirectionText = '!! need to fix a bug in our code to figure out who won...';
+        gameDirectionText = '! need to fix a bug in our code to figure out who won...';
     }
-  } else if (player0Result.handType > computerResult.handType) {
-    gameDirectionText = 'you won with ' + document.getElementById('player0Result').innerText;
-    gGameState.wallet += gGameState.pot;
-    gGameState.pot = 0; 
-  } else if (player0Result.handType < computerResult.handType) {
-    gameDirectionText = 'you lost against ' + document.getElementById('computerResult').innerText;
-    gGameState.pot = 0; 
-  } else {
-      gameDirectionText = '! need to fix a bug in our code to figure out who won...';
-  }
-  gameDirections.innerHTML = gameDirectionText;
+    gameDirections.innerHTML = gameDirectionText;
 
+    gGameState.state = -1;
+  }
 }
 //-->
 </script>

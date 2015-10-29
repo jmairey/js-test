@@ -45,6 +45,13 @@ body
 
 <script type="text/javascript">
 <!--
+
+var gGameState = {
+    state: -1,
+    pot: 0,
+    wallet: 100,
+};
+
 var gCard0;
 var gCard1;
 var gCard2;
@@ -140,8 +147,7 @@ gDeckData = [
 
 ];
 
-function drawCard(hand)
-{
+function drawCard(hand) {
   var cardIndex = Math.floor(Math.random()*gCardsLeftInDeck);
 
   if (cardIndex === gCardsLeftInDeck) {
@@ -153,11 +159,9 @@ function drawCard(hand)
 
   //console.log('cardIndex = ', cardIndex);
   //console.log('hand = ', hand);
-
 }
 
-function discardHand(hand)
-{
+function discardHand(hand) {
   if (hand && hand.length === 5) {
     gDiscards.push(hand[0],hand[1],hand[2],hand[3],hand[4]);
     hand.pop(); 
@@ -169,13 +173,13 @@ function discardHand(hand)
 }
 
 function returnDiscards() {
-
   var i;
   for (i = 0; i < gDiscards.length; i++) {
     gDeck.splice(0,0,gDiscards[i]); // can't just push, want them ahead of the jokers
     gCardsLeftInDeck += 1;
   }
   gDiscards = [];
+
 
   gDeck.sort(indexCompare);
 }
@@ -184,7 +188,7 @@ function cardCompare(a,b) {
   return gDeckData[a][0] - gDeckData[b][0];
 }
 
-function deal(hand0, hand1){
+function deal(hand0, hand1) {
   //console.log("gDeck = ",gDeck);
   var i;
   for (i = 0; i < 5; i++) {
@@ -218,7 +222,11 @@ function anteAndDealHands(buttonObj) {
   resetCardPositions();
 
   var gameDirections = document.getElementById("gameDirections");
-  gameDirections.innerHTML = "select cards to discard then hit Call or Fold..."
+  var gameDirectionsText = "select cards to discard then hit Call or Fold..."
+  gGameState.pot += 2*5; // two players ante
+  gGameState.wallet -= 5;
+  gameDirectionsText += 'wallet ' + gGameState.wallet + ' pot ' + gGameState.pot;
+  gameDirections.innerHTML = gameDirectionsText;
 
   document.getElementById('player0Result').innerHTML = "your hand analysis "
   document.getElementById('computerResult').innerHTML = "computer hand analysis "
@@ -269,6 +277,8 @@ function discardCurrentCard(buttonObj) {
 function doneDiscard(buttonObj) {
   //alert(buttonObj.value);
 
+  returnDiscards();
+
   var i;
   var cardIndex;
   for (i = 0; i < 5; i++) {
@@ -288,7 +298,7 @@ function doneDiscard(buttonObj) {
 }
 
 function foldHand(buttonObj) {
-  alert(buttonObj.value);
+  //alert(buttonObj.value);
   callGame(buttonObj)
 }
 
@@ -508,7 +518,6 @@ function callGame(buttonObj){
 
   resetCardPositions();
 
-
   var player0Result = analyzeHand(gHand0);
   setResultHTML(player0Result,document.getElementById('player0Result'));
 
@@ -520,24 +529,35 @@ function callGame(buttonObj){
     if (player0Result.handRank === computerResult.handRank) {
       if (player0Result.handRank2 === computerResult.handRank2) {
         gameDirectionText = 'split the pot...';
+        gGameState.wallet += gGameState.pot/2;
+        gGameState.pot = 0; 
       } else if (player0Result.handRank2 > computerResult.handRank2) {
         gameDirectionText = 'you won with ' + document.getElementById('player0Result').innerText;
+        gGameState.wallet += gGameState.pot;
+        gGameState.pot = 0; 
       } else if (player0Result.handRank2 < computerResult.handRank2) {
         gameDirectionText = 'you lost against ' + document.getElementById('computerResult').innerText;
+        gGameState.pot = 0; 
       } else {
         gameDirectionText = '!!! need to fix a bug in our code to figure out who won...';
       }
     } else if (player0Result.handRank > computerResult.handRank) {
       gameDirectionText = 'you won with ' + document.getElementById('player0Result').innerText;
+      gGameState.wallet += gGameState.pot;
+      gGameState.pot = 0; 
     } else if (player0Result.handRank < computerResult.handRank) {
       gameDirectionText = 'you lost against ' + document.getElementById('computerResult').innerText;
+      gGameState.pot = 0; 
     } else {
         gameDirectionText = '!! need to fix a bug in our code to figure out who won...';
     }
   } else if (player0Result.handType > computerResult.handType) {
     gameDirectionText = 'you won with ' + document.getElementById('player0Result').innerText;
+    gGameState.wallet += gGameState.pot;
+    gGameState.pot = 0; 
   } else if (player0Result.handType < computerResult.handType) {
     gameDirectionText = 'you lost against ' + document.getElementById('computerResult').innerText;
+    gGameState.pot = 0; 
   } else {
       gameDirectionText = '! need to fix a bug in our code to figure out who won...';
   }

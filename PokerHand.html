@@ -158,17 +158,21 @@ function drawCard(hand)
 
 function discardHand(hand)
 {
-  var cardsInHand = hand.length;
-
-  gDiscards.splice(0,0,hand[0],hand[1],hand[2],hand[3],hand[4]);
-  hand.pop(); hand.pop(); hand.pop(); hand.pop(); hand.pop();
-
+  if (hand && hand.length === 5) {
+    gDiscards.push(hand[0],hand[1],hand[2],hand[3],hand[4]);
+    hand.pop(); 
+    hand.pop(); 
+    hand.pop(); 
+    hand.pop(); 
+    hand.pop();
+  }
 }
 
 function returnDiscards() {
+
   var i;
   for (i = 0; i < gDiscards.length; i++) {
-    gDeck.splice(0,0,gDiscards[i]);
+    gDeck.splice(0,0,gDiscards[i]); // can't just push, want them ahead of the jokers
     gCardsLeftInDeck += 1;
   }
   gDiscards = [];
@@ -197,68 +201,76 @@ function deal(hand0, hand1){
   //console.log("gDeck = ",gDeck);
 }
 
-function init(){
-  var img;
+function redCardBack(buttonObj) {
+  alert(buttonObj.type);
+}
+
+function anteAndDealHands(buttonObj) {
+  //alert(buttonObj.value);
+
+  discardHand(gHand0);
+  discardHand(gHand1);
+
+  returnDiscards();
 
   deal(gHand0, gHand1);
+
+  resetCardPositions();
+
+  var gameDirections = document.getElementById("gameDirections");
+  gameDirections.innerHTML = "select cards to discard then hit Call or Fold..."
+
+  document.getElementById('player0Result').innerHTML = "your hand analysis "
+  document.getElementById('computerResult').innerHTML = "computer hand analysis "
+}
+
+function discardCurrentCard(buttonObj) {
+  alert(buttonObj.value);
+}
+
+function doneDiscard(buttonObj) {
+  alert(buttonObj.value);
+}
+
+function foldHand(buttonObj) {
+  alert(buttonObj.value);
+}
+
+function init(){
+
+  var img;
 
   img = document.getElementById('card0');
   img.style.position= 'relative'; 
   img.style.left = '0px'; 
   img.style.bottom = '0px'; 
-  img.src = gDeckData[gHand0[0]][3];
   gCard0 = img;
 
   img = document.getElementById('card1');
   img.style.position= 'relative'; 
   img.style.left = '0px'; 
   img.style.bottom = '0px'; 
-  img.src = gDeckData[gHand0[1]][3];
   gCard1 = img;
 
   img = document.getElementById('card2');
   img.style.position= 'relative'; 
   img.style.left = '0px'; 
   img.style.bottom = '0px'; 
-  img.src = gDeckData[gHand0[2]][3];
   gCard2 = img;
 
   img = document.getElementById('card3');
   img.style.position= 'relative'; 
   img.style.left = '0px'; 
   img.style.bottom = '0px'; 
-  img.src = gDeckData[gHand0[3]][3];
   gCard3 = img;
 
   img = document.getElementById('card4');
   img.style.position= 'relative'; 
   img.style.left = '0px'; 
   img.style.bottom = '0px'; 
-  img.src = gDeckData[gHand0[4]][3];
   gCard4 = img;
 
-  gCurCard = gCard0;
-  gCurCard.style.zIndex = 1;
-  gCurCard.className="curCard";
-
   gPlayer0Cards = document.getElementById('player0Cards');
-
-  /*
-  img = document.getElementById('player1card0');
-  img.src = gDeckData[gHand1[0]][3];
-
-  img = document.getElementById('player1card1');
-  img.src = gDeckData[gHand1[1]][3];
-
-  img = document.getElementById('player1card2');
-  img.src = gDeckData[gHand1[2]][3];
-
-  img = document.getElementById('player1card3');
-  img.src = gDeckData[gHand1[3]][3];
-
-  img = document.getElementById('player1card4');
-  img.src = gDeckData[gHand1[4]][3];
-  */
 
 }
 
@@ -345,23 +357,26 @@ function moveCardDown(img,incr){
 
 <script type="text/javascript">
 <!--
-function setCardCurrent(card){
-  gCurCard.style.zIndex = 0;
-  gCurCard.className="";
+function setOrToggleCurrentCard(card){
+  if (gCurCard) {
+    if (gCurCard !== card) {
+      gCurCard.style.zIndex = 0;
+      gCurCard.className="";
 
-  gCurCard = card;
-  gCurCard.style.zIndex = 1;
-  gCurCard.className="curCard";
-}
-//-->
-</script>
+      gCurCard = card;
+      gCurCard.style.zIndex = 1;
+      gCurCard.className="curCard";
+    } else {
+      gCurCard.style.zIndex = 0;
+      gCurCard.className="";
+      gCurCard = undefined;
+    }
 
-<script type="text/javascript">
-<!--
-function swapCardsSrc(cardA,cardB){
-  var tmp = cardA.src;
-  cardA.src = cardB.src
-  cardB.src = tmp;
+  } else if (card) {
+    gCurCard = card;
+    gCurCard.style.zIndex = 1;
+    gCurCard.className="curCard";
+  }
 }
 //-->
 </script>
@@ -373,11 +388,7 @@ function indexCompare(a,b) {
   return a - b;
 }
 
-function startGame(buttonObj){
-  //alert(buttonObj.type);
-  //alert(buttonObj.value);
-  var response = prompt('really ready to start game?', 'yes');
-  //alert(response);
+function resetCardPositions() {
   var img;
 
   img = document.getElementById('card0');
@@ -385,52 +396,61 @@ function startGame(buttonObj){
   img.style.left = '0px'; 
   img.style.bottom = '0px'; 
   img.src = gDeckData[gHand0[0]][3];
-  gCard0 = img;
 
   img = document.getElementById('card1');
   img.style.position= 'relative'; 
   img.style.left = '0px'; 
   img.style.bottom = '0px'; 
   img.src = gDeckData[gHand0[1]][3];
-  gCard1 = img;
 
   img = document.getElementById('card2');
   img.style.position= 'relative'; 
   img.style.left = '0px'; 
   img.style.bottom = '0px'; 
   img.src = gDeckData[gHand0[2]][3];
-  gCard2 = img;
 
   img = document.getElementById('card3');
   img.style.position= 'relative'; 
   img.style.left = '0px'; 
   img.style.bottom = '0px'; 
   img.src = gDeckData[gHand0[3]][3];
-  gCard3 = img;
 
   img = document.getElementById('card4');
   img.style.position= 'relative'; 
   img.style.left = '0px'; 
   img.style.bottom = '0px'; 
   img.src = gDeckData[gHand0[4]][3];
-  gCard4 = img;
-
-  setCardCurrent(gCard0);
 
   img = document.getElementById('player1card0');
+  //img.src = "../cardimages/small/75/back-blue-75-3.png";
   img.src = gDeckData[gHand1[0]][3];
 
   img = document.getElementById('player1card1');
-  img.src = gDeckData[gHand1[1]][3]
+  //img.src = "../cardimages/small/75/back-blue-75-3.png";
+  img.src = gDeckData[gHand1[1]][3];
 
   img = document.getElementById('player1card2');
+  //img.src = "../cardimages/small/75/back-blue-75-3.png";
   img.src = gDeckData[gHand1[2]][3];
 
   img = document.getElementById('player1card3');
+  //img.src = "../cardimages/small/75/back-blue-75-3.png";
   img.src = gDeckData[gHand1[3]][3];
 
   img = document.getElementById('player1card4');
+  //img.src = "../cardimages/small/75/back-blue-75-3.png";
   img.src = gDeckData[gHand1[4]][3];
+}
+
+function callGame(buttonObj){
+  //alert(buttonObj.type);
+  //alert(buttonObj.value);
+  //var response = prompt('really ready to start game?', 'yes');
+  //alert(response);
+
+  resetCardPositions();
+
+  setOrToggleCurrentCard(gCurCard);
 
   var player0Result = analyzeHand(gHand0);
   setResultHTML(player0Result,document.getElementById('player0Result'));
@@ -466,14 +486,6 @@ function startGame(buttonObj){
   }
   gameDirections.innerHTML = gameDirectionText;
 
-  discardHand(gHand0);
-
-  discardHand(gHand1);
-
-  returnDiscards();
-
-
-  deal(gHand0, gHand1);
 }
 //-->
 </script>
@@ -481,23 +493,23 @@ function startGame(buttonObj){
 <script type="text/javascript">
 <!--
 function handleCard0Click(){
-  setCardCurrent(gCard0);
+  setOrToggleCurrentCard(gCard0);
 }
 
 function handleCard1Click(){
-  setCardCurrent(gCard1);
+  setOrToggleCurrentCard(gCard1);
 }
 
 function handleCard2Click(){
-  setCardCurrent(gCard2);
+  setOrToggleCurrentCard(gCard2);
 }
 
 function handleCard3Click(){
-  setCardCurrent(gCard3);
+  setOrToggleCurrentCard(gCard3);
 }
 
 function handleCard4Click(){
-  setCardCurrent(gCard4);
+  setOrToggleCurrentCard(gCard4);
 }
 //-->
 </script>
@@ -771,7 +783,7 @@ function setResultHTML(result,resultElement) {
 <body>
 
 <h2 id="gameDirections"> 
-here's your poker hand... aces high. click red card to start
+click Ante and Deal Hands to start...
 </h2>
 
 <!--
@@ -806,7 +818,7 @@ here's your poker hand... aces high. click red card to start
 
 </div>
 
-<div id="firstButtons">
+<div id="movementButtons">
 <form>
 <input type="button" value="Move Card Left " onclick="moveCardLeft(gCurCard,10);" />
 <input type="button" value="Move Card Right" onclick="moveCardRight(gCurCard,10);" />
@@ -815,31 +827,15 @@ here's your poker hand... aces high. click red card to start
 </form>
 </div>
 
-<!-- just some test code
 <div id="secondButtons">
 <form>
-<input type="button" value="Make Card0 Currrent    " onclick="setCardCurrent(gCard0);" />
-<input type="button" value="Make Card4 Currrent    " onclick="setCardCurrent(gCard4);" />
-<input type="button" value="Swap Card0 n Card4 srcs" onclick="swapCardsSrc(gCard0,gCard4);" />
+<input type="button" value="Start: Ante and Deal Hands" onclick="anteAndDealHands(this);" />
+<input type="button" value="Discard Selected Card" onclick="discardCurrentCard(this);" />
+<input type="button" value="Done Discard" onclick="doneDiscard(this);" />
+<input type="button" value="Fold" onclick="foldHand(this);" />
+<input type="button" value="Call" onclick="callGame(this);" />
 </form>
 </div>
--->
-
-<!-- hard to get the styling to work 
-<style type="text/css">
-input#cardButton0 { 
-      background-color:teal;
-      color:teal;
-      border-color:teal;
-}
-</style>
-
-<div id="thirdButtons" >
-<form id="theForm" >
-<input id="cardButton0" type="image" src="../cardimages/small/75/back-blue-75-1.png" alt="a card" onclick="startGame(this);" />
-</form>
-</div>
--->
 
 <div id="player1Cards" class="player1Cards">
 
@@ -880,10 +876,12 @@ computer hand analysis
 </style>
 
 <div id="fourthButtons">
-    <button id = "cardButton1" onclick="startGame(this);"  >
+    <button id = "cardButton1" onclick="redCardBack(this);"  >
         <img src="../cardimages/small/75/back-red-75-3.png"  />
     </button>
+</div>
 
+<div>
     <canvas id="pokerCanvas" width="320" height="240">
     </canvas>
 </div>

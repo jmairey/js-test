@@ -225,15 +225,71 @@ function anteAndDealHands(buttonObj) {
 }
 
 function discardCurrentCard(buttonObj) {
-  alert(buttonObj.value);
+  //alert(buttonObj.value);
+  if (gCurCard) {
+    if        (gCurCard === gCard0) {
+      //alert("discard Card 0");
+      if (gHand0[0] < 52) {
+        gCard0.src = "../cardimages/small/75/back-blue-75-3.png";
+        gDiscards.push(gHand0[0]);
+        gHand0[0] = 52;
+      }
+    } else if (gCurCard === gCard1) {
+      //alert("discard Card 1");
+      if (gHand0[1] < 52) {
+        gCard1.src = "../cardimages/small/75/back-blue-75-3.png";
+        gDiscards.push(gHand0[1]);
+        gHand0[1] = 52;
+      }
+    } else if (gCurCard === gCard2) {
+      //alert("discard Card 2");
+      if (gHand0[2] < 52) {
+        gCard2.src = "../cardimages/small/75/back-blue-75-3.png";
+        gDiscards.push(gHand0[2]);
+        gHand0[2] = 52;
+      }
+    } else if (gCurCard === gCard3) {
+      //alert("discard Card 3");
+      if (gHand0[3] < 52) {
+        gCard3.src = "../cardimages/small/75/back-blue-75-3.png";
+        gDiscards.push(gHand0[3]);
+        gHand0[3] = 52;
+      }
+    } else if (gCurCard === gCard4) {
+      //alert("discard Card 4");
+      if (gHand0[4] < 52) {
+        gCard4.src = "../cardimages/small/75/back-blue-75-3.png";
+        gDiscards.push(gHand0[4]);
+        gHand0[4] = 52;
+      }
+    }
+  }
 }
 
 function doneDiscard(buttonObj) {
-  alert(buttonObj.value);
+  //alert(buttonObj.value);
+
+  var i;
+  var cardIndex;
+  for (i = 0; i < 5; i++) {
+    if (gHand0[i] === 52) {
+      cardIndex = Math.floor(Math.random()*gCardsLeftInDeck);
+
+      if (cardIndex !== gCardsLeftInDeck) {
+        gHand0[i] = cardIndex;
+        gCardsLeftInDeck -= 1;
+      }
+    }
+  }
+
+  gHand0.sort(cardCompare);
+
+  resetCardPositions();
 }
 
 function foldHand(buttonObj) {
   alert(buttonObj.value);
+  callGame(buttonObj)
 }
 
 function init(){
@@ -440,6 +496,8 @@ function resetCardPositions() {
   img = document.getElementById('player1card4');
   //img.src = "../cardimages/small/75/back-blue-75-3.png";
   img.src = gDeckData[gHand1[4]][3];
+
+  setOrToggleCurrentCard(gCurCard);
 }
 
 function callGame(buttonObj){
@@ -450,7 +508,6 @@ function callGame(buttonObj){
 
   resetCardPositions();
 
-  setOrToggleCurrentCard(gCurCard);
 
   var player0Result = analyzeHand(gHand0);
   setResultHTML(player0Result,document.getElementById('player0Result'));
@@ -462,7 +519,7 @@ function callGame(buttonObj){
   if (player0Result.handType === computerResult.handType) {
     if (player0Result.handRank === computerResult.handRank) {
       if (player0Result.handRank2 === computerResult.handRank2) {
-        gameDirectionText = 'split the pot?';
+        gameDirectionText = 'split the pot...';
       } else if (player0Result.handRank2 > computerResult.handRank2) {
         gameDirectionText = 'you won with ' + document.getElementById('player0Result').innerText;
       } else if (player0Result.handRank2 < computerResult.handRank2) {
@@ -786,24 +843,6 @@ function setResultHTML(result,resultElement) {
 click Ante and Deal Hands to start...
 </h2>
 
-<!--
-<div id="bigCards">
-
-<h3> with big images...</h3>
-
-<img src="../cardimages/big/150/clubs-10-150.png" alt="10 of clubs" />
-
-<img src="../cardimages/big/150/hearts-10-150.png" alt="10 of hearts" />
-
-<img src="../cardimages/big/150/diamonds-10-150.png" alt="10 of diamonds" />
-
-<img src="../cardimages/big/150/spades-10-150.png" alt="10 of spades" />
-
-<img src="../cardimages/big/150/hearts-k-150.png" alt="king of hearts" />
-
-</div>
--->
-
 <div id="player0Cards" class="player0Cards">
 
 <img id="card0" src="../cardimages/small/75/back-blue-75-3.png" onclick="handleCard0Click();" />
@@ -827,7 +866,7 @@ click Ante and Deal Hands to start...
 </form>
 </div>
 
-<div id="secondButtons">
+<div id="playButtons">
 <form>
 <input type="button" value="Start: Ante and Deal Hands" onclick="anteAndDealHands(this);" />
 <input type="button" value="Discard Selected Card" onclick="discardCurrentCard(this);" />
@@ -844,13 +883,9 @@ and another hand (yep, allowing it to be seen for now)
 </h3>
 
 <img id="player1card0" src="../cardimages/small/75/back-blue-75-3.png" />
-
 <img id="player1card1" src="../cardimages/small/75/back-blue-75-3.png" />
-
 <img id="player1card2" src="../cardimages/small/75/back-blue-75-3.png" />
-
 <img id="player1card3" src="../cardimages/small/75/back-blue-75-3.png" />
-
 <img id="player1card4" src="../cardimages/small/75/back-blue-75-3.png" />
 
 <h3 id="player0Result">

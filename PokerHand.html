@@ -286,7 +286,7 @@ function doneDiscard(buttonObj) {
       cardIndex = Math.floor(Math.random()*gCardsLeftInDeck);
 
       if (cardIndex !== gCardsLeftInDeck) {
-        gHand0[i] = cardIndex;
+        gHand0[i] = gDeck.splice(cardIndex,1)[0];
         gCardsLeftInDeck -= 1;
       }
     }
@@ -295,6 +295,12 @@ function doneDiscard(buttonObj) {
   gHand0.sort(cardCompare);
 
   resetCardPositions();
+
+  //console.log('deck = ', gDeck);
+  //console.log('hand0 = ', gHand0);
+  //console.log('hand1 = ', gHand1);
+
+  // should assert that ghand0, ghand1 and gDeck make a complete deck?
 }
 
 function foldHand(buttonObj) {

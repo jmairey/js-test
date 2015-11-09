@@ -1,13 +1,92 @@
 var express = require('express');
 var app = express();
+var fs = require('fs');
 
-app.use(express.static('..')); // try to serve static files under .. ?
-app.use(express.static('.')); // try to serve static files under . ?
+var bodyParser = require('body-parser');
+var urlencodedParser = bodyParser.urlencoded({ extended: false });
+var multer = require('multer');
+
+var cookieParser = require('cookie-parser');
+
+app.use(urlencodedParser);
+//app.use(multer({ dest: __dirname + '/tmp/'}));  //fails on this, probably /tmp/ no good
+
+app.use(cookieParser());
+
+app.use(express.static('..')); // serve static files under ..
+app.use(express.static('.')); // serve static files under . 
+
+app.get('/gameloop',function(req, res) {
+  console.log("got a GET request for /gameloop");
+  //console.log("__dirname = ",__dirname);
+  res.sendFile(__dirname + '/' + 'gameLoop2.html');
+});
+
+app.get('/poker',function(req, res) {
+  console.log("got a GET request for /poker");
+  //console.log("__dirname = ",__dirname);
+  res.sendFile(__dirname + '/' + 'PokerHand.html');
+});
+
+app.get('/index.htm', function(req, res) {
+  console.log("Got a GET request for index.htm ");
+  res.sendFile(__dirname + '/' + 'index.htm');
+});
+
+app.get('/process_get', function(req, res) {
+  // prepare output in JSON format
+  var response = {
+    first_name:req.query.first_name,
+    last_name:req.query.last_name,
+  };
+  console.log(response);
+  res.end(JSON.stringify(response));
+});
+
+app.post('/process_post', urlencodedParser, function (req, res) {
+
+  // prepare output in JSON format
+  var response = {
+    first_name:req.body.first_name,
+    last_name:req.body.last_name,
+  };
+  console.log(response);
+  res.end(JSON.stringify(response));
+
+});
+
+app.post('/file_upload', function(req, res) {
+  //console.log(req);
+  // seems like this property files doesn't exist in req.
+
+  console.log(req.files.file.name);
+  console.log(req.files.file.path);
+  console.log(req.files.file.type);
+
+  var file = __dirname + '/' + req.files.file.name;
+
+  fs.readFile(req.files.file.path, function(err, data) {
+    fs.writeFile(file, data, function(err) {
+      if (err) {
+        console.log(err);
+      } else {
+        var response = {
+          message:'File uploaded successfully',
+          filename:req.files.file.name,
+        };
+      }
+      console.log(respons);
+      res.end(JSON.stringify(respons));
+    });
+  });
+});
 
 // This responds with 'Hello GET' on the home page.
 app.get('/', function(req, res) {
   console.log("Got a GET request for the homepage");
-  res.send('Hello GET');
+  console.log("Cookies: ", req.cookies);
+  //res.send('Hello GET');
+  res.end(JSON.stringify(req.cookies));
 });
 
 app.post('/', function(req, res) {
@@ -15,26 +94,55 @@ app.post('/', function(req, res) {
   res.send('Hello POST');
 });
 
-app.delete('/del_user', function(req, res) {
+app.get('/del_user', function(req, res) {
   console.log("Got a DELETE request for /del_user");
-  res.send('Hello DELETE');
+  fs.readFile(__dirname + '/users.json', 'utf8', function(err, data) {
+    var json = JSON.parse(data);
+    delete json['user2'];
+    console.log(json);
+    res.end(JSON.stringify(json));
+  });
 });
 
 app.get('/list_user', function(req, res) {
-  console.log("got a GET request for /list_user");
-  res.send('Page Listing');
+  console.log("\ngot a GET request for /list_user");
+  fs.readFile(__dirname + '/users.json', 'utf8', function(err, data) {
+    var json = JSON.parse(data);
+    console.log(json);
+    res.end(JSON.stringify(json));
+  });
+  //res.send('Page Listing');
 });
 
-app.get('/gameloop',function(req, res) {
-  console.log("got a GET request for /gameloop");
-  console.log("__dirname = ",__dirname);
-  res.sendFile(__dirname + '/' + 'gameLoop2.html');
+app.get('/:id', function(req, res) {
+  //first read existing users
+  fs.readFile(__dirname + '/users.json', 'utf8', function(err, data) {
+    var json = JSON.parse(data);
+    var user = json["user" + req.params.id];
+    console.log(user);
+    res.end(JSON.stringify(user));
+  });
 });
-app.get('/poker',function(req, res) {
-  console.log("got a GET request for /poker");
-  console.log("__dirname = ",__dirname);
-  res.sendFile(__dirname + '/' + 'PokerHand.html');
+
+var user = {
+  "user4" : {
+    "name" : "mohit",
+    "password" : "password4",
+    "profession" : "teacher",
+    "id": 4,
+  }
+};
+
+app.get('/add_user', function(req, res) {
+  // first read existing users
+  fs.readFile(__dirname + '/users.json', 'utf8', function(err, data) {
+    data = JSON.parse(data);
+    data["user4"] = user["user4"];
+    console.log(data);
+    res.end(JSON.stringify(data));
+  });
 });
+
 
 app.get('/ab*cd', function(req, res) {
   console.log("Got a GET request for /ab*cd");

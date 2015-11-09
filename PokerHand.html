@@ -46,6 +46,12 @@ body
 <script type="text/javascript">
 <!--
 
+var gXHR;
+var gXHRData;
+//var gURL = 'http://127.0.0.1:8081'
+var gURL = 'http://jmairey-rMBP.local:8081'
+//var gURL = 'http://localhost:8081'
+
 var gGameState = {
     state: -1,
     pot: 0,
@@ -354,6 +360,22 @@ function init(){
   gCard4 = img;
 
   gPlayer0Cards = document.getElementById('player0Cards');
+
+  gXHR = new XMLHttpRequest();
+
+
+  gXHR.onreadystatechange = function() {
+    if (gXHR.readyState == 4 && gXHR.status ==200) {
+      console.log(gXHR.responseText);
+    } else {
+      console.log('readyState = ',gXHR.readyState);
+      console.log('status = ',gXHR.status);
+    }
+  };
+
+  gXHR.open('GET', gURL+'/list_user', true);
+
+  gXHR.send();
 
 }
 

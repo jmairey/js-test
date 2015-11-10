@@ -47,7 +47,7 @@ body
 <!--
 
 var gXHR;
-var gXHRData;
+//var gXHRData;
 //var gURL = 'http://127.0.0.1:8081'
 var gURL = 'http://jmairey-rMBP.local:8081'
 //var gURL = 'http://localhost:8081'
@@ -363,10 +363,24 @@ function init(){
 
   gXHR = new XMLHttpRequest();
 
-
   gXHR.onreadystatechange = function() {
-    if (gXHR.readyState == 4 && gXHR.status ==200) {
-      console.log(gXHR.responseText);
+    if (gXHR.readyState === 4 && gXHR.status === 200) {
+      //console.log(gXHR.responseText);
+
+      var json = JSON.parse(gXHR.responseText);
+      //console.log(json);
+
+      var playerIndex = Math.floor(Math.random()*json.players.length);
+      var user = json.players[playerIndex];
+
+      //console.log(user);
+
+      var gameDirections = document.getElementById("gameDirections");
+      var gameDirectionsText = user.name 
+                             + ', please kindly ' 
+                             + gameDirections.innerHTML;
+      gameDirections.innerHTML = gameDirectionsText;
+
     } else {
       console.log('readyState = ',gXHR.readyState);
       console.log('status = ',gXHR.status);
@@ -616,10 +630,30 @@ function callGame(buttonObj){
     } else {
         gameDirectionText = '! need to fix a bug in our code to figure out who won...';
     }
-    gameDirections.innerHTML = gameDirectionText;
+
+    var gXHR = new XMLHttpRequest();
+    gXHR.open("POST", "/poker/call");
+    gXHR.setRequestHeader('Content-Type', 'application/json');
+    gXHR.onreadystatechange = function() {
+      if (gXHR.readyState===4 && gXHR.status===200){
+        var jsonObj = JSON.parse(gXHR.responseText);
+        //console.log(gXHR.responseText);
+        console.log(' response from server:',jsonObj);
+        gGameState.wallet = jsonObj.wallet;
+        gameDirections.innerHTML = gameDirectionText + jsonObj.andSomeOtherData;
+      } else {
+        gameDirections.innerHTML = '...';
+      }
+    };
+    var someData = { wallet: gGameState.wallet };
+    var jsonString = JSON.stringify(someData);
+    gXHR.send(jsonString);
+
 
     gGameState.state = -1;
   }
+
+
 }
 //-->
 </script>

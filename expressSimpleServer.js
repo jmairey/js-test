@@ -4,10 +4,12 @@ var fs = require('fs');
 
 var bodyParser = require('body-parser');
 var urlencodedParser = bodyParser.urlencoded({ extended: false });
+var jsonParser = bodyParser.json();
 var multer = require('multer');
 
 var cookieParser = require('cookie-parser');
 
+app.use(jsonParser);
 app.use(urlencodedParser);
 //app.use(multer({ dest: __dirname + '/tmp/'}));  //fails on this, probably /tmp/ no good
 
@@ -26,6 +28,18 @@ app.get('/poker',function(req, res) {
   console.log("got a GET request for /poker");
   //console.log("__dirname = ",__dirname);
   res.sendFile(__dirname + '/' + 'PokerHand.html');
+});
+
+app.post('/poker/call', jsonParser, function(req, res) {
+  console.log("got a POST request for /poker/call");
+  console.log('incoming from client:',req.body);
+  var jsonResponse = {
+    wallet: req.body.wallet - 1,
+    andSomeOtherData: ' and thanks for playing, btw we charged you $1...'
+  };
+  var jsonString = JSON.stringify(jsonResponse);
+  console.log('server response:',jsonString);
+  res.end(jsonString);
 });
 
 app.get('/index.htm', function(req, res) {
@@ -75,8 +89,8 @@ app.post('/file_upload', function(req, res) {
           filename:req.files.file.name,
         };
       }
-      console.log(respons);
-      res.end(JSON.stringify(respons));
+      console.log(response);
+      res.end(JSON.stringify(response));
     });
   });
 });
@@ -89,10 +103,12 @@ app.get('/', function(req, res) {
   res.end(JSON.stringify(req.cookies));
 });
 
+/*
 app.post('/', function(req, res) {
   console.log("Got a POST request for the homepage");
   res.send('Hello POST');
 });
+*/
 
 app.get('/del_user', function(req, res) {
   console.log("Got a DELETE request for /del_user");
@@ -107,13 +123,16 @@ app.get('/del_user', function(req, res) {
 app.get('/list_user', function(req, res) {
   console.log("\ngot a GET request for /list_user");
   fs.readFile(__dirname + '/users.json', 'utf8', function(err, data) {
-    var json = JSON.parse(data);
-    console.log(json);
-    res.end(JSON.stringify(json));
+    //var json = JSON.parse(data);
+    //var jsonString = JSON.stringify(json);
+    //res.end(jsonString);
+
+    res.end(data);
   });
   //res.send('Page Listing');
 });
 
+/*
 app.get('/:id', function(req, res) {
   //first read existing users
   fs.readFile(__dirname + '/users.json', 'utf8', function(err, data) {
@@ -143,11 +162,11 @@ app.get('/add_user', function(req, res) {
   });
 });
 
-
 app.get('/ab*cd', function(req, res) {
   console.log("Got a GET request for /ab*cd");
   res.send('Page Pattern Match');
 });
+*/
 
 var server = app.listen(8081, function() {
   var host = server.address().address;

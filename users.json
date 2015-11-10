@@ -1,20 +1,40 @@
 {
-  "user1" : {
-    "name" : "mahesh",
-    "password" : "password1",
-    "profession" : "teacher",
-    "id": 1
-  },
-  "user2" : {
-    "name" : "suresh",
-    "password" : "password2",
-    "profession" : "librarian",
-    "id": 2
-  },
-  "user3" : {
-    "name" : "ramesh",
-    "password" : "password3",
-    "profession" : "clerk",
-    "id": 3
-  }
+  "players": [
+    {
+      "name" : "nick",
+      "password" : "pw1",
+      "id": 1,
+      "wallet": 100
+    },
+    {
+      "name" : "sam",
+      "password" : "pw2",
+      "id": 2,
+      "wallet": 100
+    },
+    {
+      "name" : "john",
+      "password" : "pw3",
+      "id": 3,
+      "wallet": 100
+    },
+    {
+      "name" : "mj",
+      "password" : "pw4",
+      "id": 4,
+      "wallet": 100
+    },
+    {
+      "name" : "taylor",
+      "password" : "pw5",
+      "id": 5,
+      "wallet": 100
+    },
+    {
+      "name" : "jordan",
+      "password" : "pw6",
+      "id": 6,
+      "wallet": 100
+    }
+  ]
 }

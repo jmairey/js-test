@@ -42,6 +42,18 @@ app.post('/poker/call', jsonParser, function(req, res) {
   res.end(jsonString);
 });
 
+app.get('/list_user', function(req, res) {
+  console.log("\ngot a GET request for /list_user");
+  fs.readFile(__dirname + '/users.json', 'utf8', function(err, data) {
+    //var json = JSON.parse(data);
+    //var jsonString = JSON.stringify(json);
+    //res.end(jsonString);
+
+    res.end(data);
+  });
+  //res.send('Page Listing');
+});
+
 app.get('/index.htm', function(req, res) {
   console.log("Got a GET request for index.htm ");
   res.sendFile(__dirname + '/' + 'index.htm');
@@ -69,6 +81,15 @@ app.post('/process_post', urlencodedParser, function (req, res) {
 
 });
 
+
+// This responds with 'Hello GET' on the home page.
+app.get('/', function(req, res) {
+  console.log("Got a GET request for the homepage");
+  console.log("Cookies: ", req.cookies);
+  //res.send('Hello GET');
+  res.end(JSON.stringify(req.cookies));
+});
+
 app.post('/file_upload', function(req, res) {
   //console.log(req);
   // seems like this property files doesn't exist in req.
@@ -94,21 +115,12 @@ app.post('/file_upload', function(req, res) {
     });
   });
 });
-
-// This responds with 'Hello GET' on the home page.
-app.get('/', function(req, res) {
-  console.log("Got a GET request for the homepage");
-  console.log("Cookies: ", req.cookies);
-  //res.send('Hello GET');
-  res.end(JSON.stringify(req.cookies));
-});
-
 /*
+
 app.post('/', function(req, res) {
   console.log("Got a POST request for the homepage");
   res.send('Hello POST');
 });
-*/
 
 app.get('/del_user', function(req, res) {
   console.log("Got a DELETE request for /del_user");
@@ -120,19 +132,7 @@ app.get('/del_user', function(req, res) {
   });
 });
 
-app.get('/list_user', function(req, res) {
-  console.log("\ngot a GET request for /list_user");
-  fs.readFile(__dirname + '/users.json', 'utf8', function(err, data) {
-    //var json = JSON.parse(data);
-    //var jsonString = JSON.stringify(json);
-    //res.end(jsonString);
 
-    res.end(data);
-  });
-  //res.send('Page Listing');
-});
-
-/*
 app.get('/:id', function(req, res) {
   //first read existing users
   fs.readFile(__dirname + '/users.json', 'utf8', function(err, data) {
@@ -161,12 +161,12 @@ app.get('/add_user', function(req, res) {
     res.end(JSON.stringify(data));
   });
 });
+*/
 
 app.get('/ab*cd', function(req, res) {
   console.log("Got a GET request for /ab*cd");
   res.send('Page Pattern Match');
 });
-*/
 
 var server = app.listen(8081, function() {
   var host = server.address().address;

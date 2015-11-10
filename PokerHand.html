@@ -367,11 +367,11 @@ function init(){
     if (gXHR.readyState === 4 && gXHR.status === 200) {
       //console.log(gXHR.responseText);
 
-      var json = JSON.parse(gXHR.responseText);
-      //console.log(json);
+      var jsonObj = JSON.parse(gXHR.responseText);
+      //console.log(jsonObj);
 
-      var playerIndex = Math.floor(Math.random()*json.players.length);
-      var user = json.players[playerIndex];
+      var playerIndex = Math.floor(Math.random()*jsonObj.players.length);
+      var user = jsonObj.players[playerIndex];
 
       //console.log(user);
 
@@ -388,6 +388,8 @@ function init(){
   };
 
   gXHR.open('GET', gURL+'/list_user', true);
+
+  gXHR.setRequestHeader('Content-Type', 'application/json'); // not necessary?
 
   gXHR.send();
 
@@ -633,7 +635,7 @@ function callGame(buttonObj){
 
     var gXHR = new XMLHttpRequest();
     gXHR.open("POST", "/poker/call");
-    gXHR.setRequestHeader('Content-Type', 'application/json');
+    gXHR.setRequestHeader('Content-Type', 'application/json'); // seems needed
     gXHR.onreadystatechange = function() {
       if (gXHR.readyState===4 && gXHR.status===200){
         var jsonObj = JSON.parse(gXHR.responseText);

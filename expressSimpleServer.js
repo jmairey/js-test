@@ -1,22 +1,59 @@
 var express = require('express');
-var app = express();
 var fs = require('fs');
-
 var bodyParser = require('body-parser');
 var urlencodedParser = bodyParser.urlencoded({ extended: false });
 var jsonParser = bodyParser.json();
 var multer = require('multer');
-
 var cookieParser = require('cookie-parser');
+var passport = require('passport');
+var Strategy = require('passport-local').Strategy;
+
+passport.use(new Strategy(
+  function verify(username,password, cb) {
+    var user = { 
+      username: 'jack',
+      password: 'jill',
+      id: 1,
+    };
+    console.log(' verify username and password ');
+    cb(null, user);
+  })
+);
+
+
+passport.serializeUser(function(user, cb) {
+  var userId = 1;
+  console.log('  x serializeUser called');
+  cb(null, userID);
+});
+
+passport.deserializeUser(function(id, cb) {
+  var user = { 
+    username: 'jack', 
+    password: 'jill',
+    id: 1,
+  };
+  console.log('  o deSerializeUser called');
+  cb(null, user);
+});
+
+/*
+*/
+
+var app = express();
 
 app.use(jsonParser);
 app.use(urlencodedParser);
-//app.use(multer({ dest: __dirname + '/tmp/'}));  //fails on this, probably /tmp/ no good
+//app.use(multer({ dest: __dirname + '/tmp/'}));  //fails on this, maybe __dirname/tmp/ no good?
 
 app.use(cookieParser());
 
 app.use(express.static('..')); // serve static files under ..
 app.use(express.static('.')); // serve static files under . 
+
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.get('/gameloop',function(req, res) {
   console.log("got a GET request for /gameloop");

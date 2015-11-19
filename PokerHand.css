@@ -2,3 +2,41 @@
 body {
   background-color:green;
 }
+
+canvas { 
+  border: 1px solid; 
+}
+
+div.player0Cards {
+  border:5px solid;
+  border-color:black;
+
+  outline-width: 3px;
+  outline-color: white;
+  outline-style: groove;
+
+
+  margin-top: 15px;
+  margin-bottom: 15px;
+
+  padding-left: 45px;
+  padding-right: 45px;
+  padding-top: 45px;
+  padding-bottom: 45px;
+}
+
+img.curCard {
+  outline-width: 3px;
+  outline-color: purple;
+  outline-style: groove;
+}
+
+#cardButton1 {
+  background-color: green;
+  padding: 10px;
+  border-bottom-style: none;
+  border-top-style: none;
+  border-left-style: none;
+  border-right-style: none;
+  border: 0px;
+}

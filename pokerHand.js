@@ -708,12 +708,17 @@ function init(){
       //console.log(gXHR.responseText);
 
       var jsonObj = JSON.parse(gXHR.responseText);
-      //console.log(jsonObj);
 
-      var playerIndex = Math.floor(Math.random()*jsonObj.players.length);
-      var user = jsonObj.players[playerIndex];
+      console.log(jsonObj);
 
-      //console.log(user);
+      gGameState.players = jsonObj.players;
+
+      var playerIndex = Math.floor(Math.random()*gGameState.players.length);
+      var user = gGameState.players[playerIndex];
+
+      user.playing = true;
+
+      console.log(gGameState.players[playerIndex]);
 
       var gameDirections = document.getElementById("gameDirections");
       var gameDirectionsText = user.name 

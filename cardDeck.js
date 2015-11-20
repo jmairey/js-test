@@ -3,6 +3,7 @@ var gGameState = {
     state: -1,
     pot: 0,
     wallet: 100,
+    players: [],
 };
 var gDeckData;
 var gCardsLeftInDeck=52;

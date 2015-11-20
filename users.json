@@ -4,37 +4,43 @@
       "name" : "nick",
       "password" : "pw1",
       "id": 1,
-      "wallet": 100
+      "wallet": 100,
+      "playing": false
     },
     {
       "name" : "sam",
       "password" : "pw2",
       "id": 2,
-      "wallet": 100
+      "wallet": 100,
+      "playing": false
     },
     {
       "name" : "john",
       "password" : "pw3",
       "id": 3,
-      "wallet": 100
+      "wallet": 100,
+      "playing": false
     },
     {
       "name" : "mj",
       "password" : "pw4",
       "id": 4,
-      "wallet": 100
+      "wallet": 100,
+      "playing": false
     },
     {
       "name" : "taylor",
       "password" : "pw5",
       "id": 5,
-      "wallet": 100
+      "wallet": 100,
+      "playing": false
     },
     {
       "name" : "jordan",
       "password" : "pw6",
       "id": 6,
-      "wallet": 100
+      "wallet": 100,
+      "playing": false
     }
   ]
 }

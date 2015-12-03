@@ -455,23 +455,23 @@ function resetCardPositions() {
   }
 
   img = document.getElementById('player1card0');
-  //img.src = "../cardimages/small/75/back-blue-75-3.png";
+  //img.src = "../cardImages/small/75/back-blue-75-3.png";
   img.src = gDeckData[gHand1[0]][3];
 
   img = document.getElementById('player1card1');
-  //img.src = "../cardimages/small/75/back-blue-75-3.png";
+  //img.src = "../cardImages/small/75/back-blue-75-3.png";
   img.src = gDeckData[gHand1[1]][3];
 
   img = document.getElementById('player1card2');
-  //img.src = "../cardimages/small/75/back-blue-75-3.png";
+  //img.src = "../cardImages/small/75/back-blue-75-3.png";
   img.src = gDeckData[gHand1[2]][3];
 
   img = document.getElementById('player1card3');
-  //img.src = "../cardimages/small/75/back-blue-75-3.png";
+  //img.src = "../cardImages/small/75/back-blue-75-3.png";
   img.src = gDeckData[gHand1[3]][3];
 
   img = document.getElementById('player1card4');
-  //img.src = "../cardimages/small/75/back-blue-75-3.png";
+  //img.src = "../cardImages/small/75/back-blue-75-3.png";
   img.src = gDeckData[gHand1[4]][3];
 
   setOrToggleCurrentCard(gCurCard);

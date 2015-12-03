@@ -24,7 +24,7 @@ passport.use(new Strategy(
 passport.serializeUser(function(user, cb) {
   var userId = 1;
   console.log('  x serializeUser called');
-  cb(null, userID);
+  cb(null, userId);
 });
 
 passport.deserializeUser(function(id, cb) {
@@ -50,7 +50,7 @@ app.use(cookieParser());
 
 app.use(express.static('..')); // serve static files under ..
 app.use(express.static('.')); // serve static files under . 
-
+app.use('/cards',express.static('../cardImages/small/75')); // 
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -58,7 +58,7 @@ app.use(passport.session());
 app.get('/gameloop',function(req, res) {
   console.log("got a GET request for /gameloop");
   //console.log("__dirname = ",__dirname);
-  res.sendFile(__dirname + '/' + 'gameLoop2.html');
+  res.sendFile(__dirname + '/' + 'gameLoop2.html'); // works
 });
 
 app.get('/poker',function(req, res) {
@@ -79,9 +79,35 @@ app.post('/poker/call', jsonParser, function(req, res) {
   res.end(jsonString);
 });
 
+/* if we want to look at what the form sends us we can run this code */
+//app.post('/test_login', urlencodedParser, function (req, res) {   // also works
+app.post('/test_login', jsonParser, function (req, res) {
+  console.log("got a POST request for /login");
+  console.log('incoming from client:',req.body);
+  var jsonResponse = {
+    username: 'bob',
+    password: 'secret',
+    andSomeOtherData: ' yes, and some other data',
+  };
+  var jsonString = JSON.stringify(jsonResponse);
+  console.log('server response:',jsonString);
+  res.end(jsonString);
+});
+
+app.post('/login', 
+  passport.authenticate('local', 
+    { 
+      successRedirect: '../cardImages/small/75/back-blue-75-3.png',
+      failureRedirect: '../cardImages/small/75/back-red-75-3.png',
+      failureFlash: true
+    }));
+
 app.get('/list_user', function(req, res) {
   console.log("\ngot a GET request for /list_user");
   fs.readFile(__dirname + '/users.json', 'utf8', function(err, data) {
+
+    // since our file is already json, we don't have to parse it. although we could..
+
     //var json = JSON.parse(data);
     //var jsonString = JSON.stringify(json);
     //res.end(jsonString);
@@ -91,6 +117,15 @@ app.get('/list_user', function(req, res) {
   //res.send('Page Listing');
 });
 
+// This responds with the cookies when asked for /
+app.get('/', function(req, res) {
+  console.log("Got a GET request for the homepage");
+  console.log("Cookies: ", req.cookies);
+  //res.send('Hello GET');
+  res.end(JSON.stringify(req.cookies));
+});
+
+///  this is for another demo with index.htm
 app.get('/index.htm', function(req, res) {
   console.log("Got a GET request for index.htm ");
   res.sendFile(__dirname + '/' + 'index.htm');
@@ -118,15 +153,7 @@ app.post('/process_post', urlencodedParser, function (req, res) {
 
 });
 
-
-// This responds with 'Hello GET' on the home page.
-app.get('/', function(req, res) {
-  console.log("Got a GET request for the homepage");
-  console.log("Cookies: ", req.cookies);
-  //res.send('Hello GET');
-  res.end(JSON.stringify(req.cookies));
-});
-
+/*
 app.post('/file_upload', function(req, res) {
   //console.log(req);
   // seems like this property files doesn't exist in req.
@@ -152,7 +179,6 @@ app.post('/file_upload', function(req, res) {
     });
   });
 });
-/*
 
 app.post('/', function(req, res) {
   console.log("Got a POST request for the homepage");
@@ -198,12 +224,12 @@ app.get('/add_user', function(req, res) {
     res.end(JSON.stringify(data));
   });
 });
-*/
 
 app.get('/ab*cd', function(req, res) {
   console.log("Got a GET request for /ab*cd");
   res.send('Page Pattern Match');
 });
+*/
 
 var server = app.listen(8081, function() {
   var host = server.address().address;

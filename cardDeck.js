@@ -26,7 +26,7 @@ gCardSuitIndex = 1;
 gCardNameIndex = 2;
 gCardFilenameIndex = 3;
 
-gPrefix = '../cardimages/small/75/';
+gPrefix = '../cardImages/small/75/';
 gSuffix = '-75.png';
 gDeckData = [
 

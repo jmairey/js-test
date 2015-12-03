@@ -701,6 +701,7 @@ function init(){
 
   gPlayer0Cards = document.getElementById('player0Cards');
 
+  /*
   gXHR = new XMLHttpRequest();
 
   gXHR.onreadystatechange = function() {
@@ -721,7 +722,7 @@ function init(){
       console.log(gGameState.players[playerIndex]);
 
       var gameDirections = document.getElementById("gameDirections");
-      var gameDirectionsText = user.name 
+      var gameDirectionsText = user.username 
                              + ', please kindly ' 
                              + gameDirections.innerHTML;
       gameDirections.innerHTML = gameDirectionsText;
@@ -737,6 +738,7 @@ function init(){
   //gXHR.setRequestHeader('Content-Type', 'application/json'); // not necessary?
 
   gXHR.send();
+  */
 
 }
 

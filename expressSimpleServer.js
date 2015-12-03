@@ -1,3 +1,4 @@
+// this section is our dependencies on other node modules and very similar code, more like #include in C, etc.
 var express = require('express');
 var fs = require('fs');
 var bodyParser = require('body-parser');
@@ -8,39 +9,100 @@ var cookieParser = require('cookie-parser');
 var passport = require('passport');
 var Strategy = require('passport-local').Strategy;
 
+
+// define some functions for use by server code below
+
+function findUser(username) {
+  //console.log('in findUser, looking for ',username);
+  //console.log('in findUser, gGameState.players = :',gGameState.players);
+  var i; 
+  for (i = 0; i < gGameState.players.length; i++) {
+    var player = gGameState.players[i];
+    if (username === player.username) {
+      //console.log(' findUser found player username ');
+      return player;
+    }
+  }
+
+  console.log(' findUser did not find username ',username);
+  return undefined;
+}
+
+// we think passport authentication code has to be established first ?
+
 passport.use(new Strategy(
   function verify(username,password, cb) {
-    var user = { 
-      username: 'jack',
-      password: 'jill',
-      id: 1,
-    };
-    console.log(' verify username and password ');
-    cb(null, user);
+    console.log(' passport verify username and password: ',username, ',', password);
+
+    var user = findUser(username);
+
+    if (user === undefined) {
+      console.log(' passport verify could not find username:', username);
+      cb(null, undefined);
+    } else if (user.password !== password) {
+      console.log(' passport found matching player username:',username,' but PASSWORD ', password, ' DID NOT MATCH ');
+      cb(null, undefined);
+    } else {
+      console.log(' passport verify found matching player username ',username,' and password ',password);
+      cb(null, user);
+    }
   })
 );
 
 
 passport.serializeUser(function(user, cb) {
-  var userId = 1;
-  console.log('  x serializeUser called');
+
+  console.log(' passport.serializeUser called: user=', user);
+  var userId = -1; 
+  if (user) {
+    userId = user.id;
+  }
   cb(null, userId);
 });
 
 passport.deserializeUser(function(id, cb) {
+
   var user = { 
-    username: 'jack', 
-    password: 'jill',
-    id: 1,
+    username: 'nobody', 
+    password: 'none',
+    id: 0,
+    wallet: 0,
+    playing: false,
   };
-  console.log('  o deSerializeUser called');
+
+  if (id > 0 && id <= gGameState.players.length) {
+    user = gGameState.players[id-1];
+  }
+
+  console.log(' passport.deSerializeUser called: id=',id,' user=',user);
+
   cb(null, user);
 });
 
 /*
+     'real' server execution actually starts here ?
 */
 
-var app = express();
+var gGameState = {
+    state: -1,
+    pot: 0,
+    players: [],
+};
+
+// read in our game and config files or connect to our database if we had one
+
+fs.readFile(__dirname + '/users.json', 'utf8', function(err, data) {
+
+    gGameState.players = JSON.parse(data).players;
+    //var jsonString = JSON.stringify(gGameState);
+    //console.log(jsonString);
+    //console.log(gGameState.players);
+});
+
+// XXX probably should actually wait for game and config files to be read and processed before we fire up express..
+// equivalent is to wait for connection to database before going forward
+
+var app = express(); // our workhorse node.js/io.js/node.io module, express, the apache replacement in our server side stack..
 
 app.use(jsonParser);
 app.use(urlencodedParser);
@@ -48,9 +110,9 @@ app.use(urlencodedParser);
 
 app.use(cookieParser());
 
-app.use(express.static('..')); // serve static files under ..
+//app.use(express.static('..')); // serve static files under ..
 app.use(express.static('.')); // serve static files under . 
-app.use('/cards',express.static('../cardImages/small/75')); // 
+app.use('/cards',express.static('../cardImages/small/75')); // in client code (in html and js) can use 'cards' instead of longer path..
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -97,8 +159,8 @@ app.post('/test_login', jsonParser, function (req, res) {
 app.post('/login', 
   passport.authenticate('local', 
     { 
-      successRedirect: '../cardImages/small/75/back-blue-75-3.png',
-      failureRedirect: '../cardImages/small/75/back-red-75-3.png',
+      successRedirect: '/cards/back-blue-75-3.png',
+      failureRedirect: '/cards/back-red-75-3.png',
       failureFlash: true
     }));
 
@@ -125,6 +187,7 @@ app.get('/', function(req, res) {
   res.end(JSON.stringify(req.cookies));
 });
 
+/*
 ///  this is for another demo with index.htm
 app.get('/index.htm', function(req, res) {
   console.log("Got a GET request for index.htm ");
@@ -153,7 +216,6 @@ app.post('/process_post', urlencodedParser, function (req, res) {
 
 });
 
-/*
 app.post('/file_upload', function(req, res) {
   //console.log(req);
   // seems like this property files doesn't exist in req.

@@ -20,10 +20,6 @@
 <!-- this is a comment... -->
 
 <body>
-  message: <input id="messageText" type="text" />
-  <br>
-  <button id="getButton">get</button>
-  <button id="setButton">set</button>
 <!--  <form id="login" action="/test_login" method="post"> -->
   <form id="login" action="/login" method="post"> 
     <div>
@@ -38,9 +34,15 @@
       <input type="submit" value="Log In"/>
     </div>
   </form>
+  <div>
+    <button id="logOut">Log Out</button>
+    message: <input id="messageText" type="text" />
+    <button id="getButton">get message</button>
+    <button id="setButton">send message</button>
+  </div>
 
   <h2 id="gameDirections"> 
-    please login, :-)
+    to join a server hosted game, please first login, :-)
   </h2>
 
   <div id="player0Cards" class="player0Cards">
@@ -95,7 +97,7 @@
 
   <div id="fourthButtons">
       <button id = "cardButton1" onclick="redCardBack(this);"  >
-          <img src="../cardImages/small/75/back-red-75-3.png"  />
+          <img src="/cards/back-red-75-3.png" />
       </button>
   </div>
 

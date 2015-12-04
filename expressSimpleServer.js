@@ -7,7 +7,7 @@ var jsonParser = bodyParser.json();
 var multer = require('multer');
 var cookieParser = require('cookie-parser');
 var passport = require('passport');
-var Strategy = require('passport-local').Strategy;
+var PassportLocalStrategy = require('passport-local').Strategy;
 
 
 // define some functions for use by server code below
@@ -30,7 +30,7 @@ function findUser(username) {
 
 // we think passport authentication code has to be established first ?
 
-passport.use(new Strategy(
+passport.use(new PassportLocalStrategy(
   function verify(username,password, cb) {
     console.log(' passport verify username and password: ',username, ',', password);
 
@@ -62,13 +62,7 @@ passport.serializeUser(function(user, cb) {
 
 passport.deserializeUser(function(id, cb) {
 
-  var user = { 
-    username: 'nobody', 
-    password: 'none',
-    id: 0,
-    wallet: 0,
-    playing: false,
-  };
+  var user = undefined;
 
   if (id > 0 && id <= gGameState.players.length) {
     user = gGameState.players[id-1];
@@ -110,22 +104,34 @@ app.use(urlencodedParser);
 
 app.use(cookieParser());
 
-//app.use(express.static('..')); // serve static files under ..
-app.use(express.static('.')); // serve static files under . 
+app.use(express.static('.')); // serve static files under .  (do we need this to serve javascript files in this main directory?)
 app.use('/cards',express.static('../cardImages/small/75')); // in client code (in html and js) can use 'cards' instead of longer path..
+
+app.use(require('express-session')({ secret: 'change me!', resave: false, saveUninitialized: false }));
 
 app.use(passport.initialize());
 app.use(passport.session());
 
 app.get('/gameloop',function(req, res) {
   console.log("got a GET request for /gameloop");
-  //console.log("__dirname = ",__dirname);
   res.sendFile(__dirname + '/' + 'gameLoop2.html'); // works
 });
 
 app.get('/poker',function(req, res) {
   console.log("got a GET request for /poker");
+
   //console.log("__dirname = ",__dirname);
+  //  also return user cookie to browser for the session. 
+  //  yes, in ths example we use the same html for logging in and when they're logged in
+  if (req.user !== undefined){
+      res.cookie('user', req.user.id);
+  }
+  else {
+      res.cookie('user', 'none');
+  }
+  console.log('/poker: user=', req.user);
+  console.log('/poker: cookies=', req.cookies);
+
   res.sendFile(__dirname + '/' + 'PokerHand.html');
 });
 
@@ -142,8 +148,7 @@ app.post('/poker/call', jsonParser, function(req, res) {
 });
 
 /* if we want to look at what the form sends us we can run this code */
-//app.post('/test_login', urlencodedParser, function (req, res) {   // also works
-app.post('/test_login', jsonParser, function (req, res) {
+app.post('/test_login', urlencodedParser, function (req, res) {   // also works
   console.log("got a POST request for /login");
   console.log('incoming from client:',req.body);
   var jsonResponse = {
@@ -159,10 +164,72 @@ app.post('/test_login', jsonParser, function (req, res) {
 app.post('/login', 
   passport.authenticate('local', 
     { 
-      successRedirect: '/cards/back-blue-75-3.png',
-      failureRedirect: '/cards/back-red-75-3.png',
-      failureFlash: true
-    }));
+      successRedirect: '/poker',
+      failureRedirect: '/poker',
+//      failureFlash: true
+}));
+
+app.get('/logout', function(req, res){
+    console.log('Server trying to logout the user...');
+    req.logout();
+    res.cookie("user","none");
+    res.redirect('/poker');
+});
+
+function setMsg(args, user, response) {
+    // save args.msg to the file "msg.txt". we DO NEED TO BE AUTHENTICATED to set the message.
+
+    if (user === undefined){
+        response.write(JSON.stringify({'err':'login for multiplayer'}));
+        response.end();
+    }
+    else {
+        fs.writeFile(__dirname + '/msg.txt', args.msg, function(err) {
+            if (err) {
+                response.write(JSON.stringify({'err':err}));
+                response.end();
+            }
+            else {
+                response.write(JSON.stringify({'result':'ok'}));
+                response.end();
+            }
+        });
+    }
+}
+
+function getMsg(args, user, response) {
+    // load result from the file 'msg.txt'.   we don't need to be authenticated to get the message.
+
+    fs.readFile(__dirname + '/msg.txt', function(err, data) {
+        if (err) {
+            response.write(JSON.stringify({'err':err}));
+            response.end();
+        }
+        else {
+            response.write(JSON.stringify({'result':data.toString()}));
+            response.end();
+        }
+    });
+}
+
+app.all('/json/:cmd', function(request, response){
+    // all /json/*,  so both post + get
+
+    response.header("Cache-control", "no-cache"); // XXX what does this do?
+
+    var user = request.user;
+    var args = request.query;
+
+    if        (request.params.cmd === 'setMsg') {
+        setMsg(args, user, response);
+    } else if (request.params.cmd === 'getMsg') {
+        getMsg(args, user, response);
+    } else {
+        console.log('cmdHander unknown cmd: ', request.params.cmd);
+        response.write(JSON.stringify({'err':'unkown cmd'}));
+        response.end();
+    }
+});
 
 app.get('/list_user', function(req, res) {
   console.log("\ngot a GET request for /list_user");

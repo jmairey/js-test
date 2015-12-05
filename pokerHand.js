@@ -6,6 +6,8 @@ var gXHR;
 var gURL = 'http://jmairey-rMBP.local:8081'
 //var gURL = 'http://localhost:8081'
 
+var gUsername;
+
 var gPlayer0Cards;
 var gCard0;
 var gCard1;
@@ -753,8 +755,13 @@ function hasSessionCookie(){
     var value = parts[1];
     cookies[key] = value;
   }
-  //user will be an id if they're logged in
-  return cookies['user'] !== 'none';
+
+  //user will be a username if they're logged in
+  if (cookies['user'] !== 'none') {
+    gUsername = cookies['user'];
+    return true;
+  }
+  return false;
 }
 
 function authenticationInit() {
@@ -766,7 +773,9 @@ function authenticationInit() {
 
   if (hasSessionCookie()){
       document.getElementById('login').style.display = 'none';
-      messageText.value = 'welcome!';
+      messageText.value = 'Welcome ' + gUsername + '!';
+      var gameDirections = document.getElementById("gameDirections");
+      gameDirections.innerHTML = 'Welcome ' + gUsername + '! :-)';
   }
   else {
       messageText.value = 'login for multiplayer';
@@ -823,6 +832,9 @@ function authenticationInit() {
         if (xhr.readyState == 4 && xhr.status == 200) {
           messageText.value = '...bye!';
           document.getElementById('login').style.display = '';
+          var gameDirections = document.getElementById("gameDirections");
+          gameDirections.innerHTML = 'play single player or login to join a server hosted game, :-)'
+          gUsername=undefined;
         }
         else {
           console.log('readyState = ',xhr.readyState);

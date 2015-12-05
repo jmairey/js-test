@@ -1,10 +1,6 @@
 //'use strict';
 
 var gXHR;
-//var gXHRData;
-//var gURL = 'http://127.0.0.1:8081'
-var gURL = 'http://jmairey-rMBP.local:8081'
-//var gURL = 'http://localhost:8081'
 
 var gUsername;
 
@@ -735,7 +731,7 @@ function init(){
     }
   };
 
-  gXHR.open('GET', gURL+'/list_user', true);
+  gXHR.open('GET', '/list_user', true);
 
   //gXHR.setRequestHeader('Content-Type', 'application/json'); // not necessary?
 

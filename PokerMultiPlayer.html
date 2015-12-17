@@ -1,0 +1,136 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> 
+<html>
+<head>
+  <title>multiplayer</title>
+
+  <!-- <link rel="stylesheet" type="text/css" href="PokerHand.css"> -->
+
+  <script type="text/javascript" src="authentication.js">
+  </script>
+
+  <script>
+    window.onload =authenticationInit;
+  </script>
+
+
+</head>
+
+<!-- this is a comment... -->
+
+<body>
+<!--  <form id="login" action="/test_login" method="post"> -->
+  <form id="login" action="/login" method="post"> 
+    <div>
+      <label>Username:</label>
+      <input type="text" name="username"/>
+    </div>
+    <div>
+      <label>Password:</label>
+      <input type="password" name="password"/>
+    </div>
+    <div>
+      <input type="submit" value="Log In"/>
+    </div>
+  </form>
+  <div>
+    <button id="logOutButton">Log Out</button>
+    message: <input id="messageText" type="text" />
+    <button id="getButton">get message</button>
+    <button id="setButton">send message</button>
+  </div>
+
+  <h2 id="gameDirections"> 
+    welcome to the server hosted game, :-)
+  </h2>
+
+  <div id="player0Cards" class="player0Cards">
+    <img id="card0" src="/cards/back-blue-75-3.png" />
+    <img id="card1" src="/cards/back-blue-75-3.png" />
+    <img id="card2" src="/cards/back-blue-75-3.png" />
+    <img id="card3" src="/cards/back-blue-75-3.png" />
+    <img id="card4" src="/cards/back-blue-75-3.png" />
+
+  </div>
+
+  <div id="playButtons">
+    <form>
+      <input type="button" value="Start: Ante and Deal Hands" onclick="anteAndDealHands(this);" />
+      <input type="button" value="Discard Selected Card" onclick="discardCurrentCard(this);" />
+      <input type="button" value="Done Discard" onclick="doneDiscard(this);" />
+      <input type="button" value="Fold" onclick="foldHand(this);" />
+      <input type="button" value="Call" onclick="callGame(this);" />
+    </form>
+  </div>
+
+  <div id="player1Cards" class="player1Cards">
+
+    <h3 id="player1msg">
+      player 1
+    </h3>
+
+    <img id="player1card0" src="/cards/back-blue-75-3.png" />
+    <img id="player1card1" src="/cards/back-blue-75-3.png" />
+    <img id="player1card2" src="/cards/back-blue-75-3.png" />
+    <img id="player1card3" src="/cards/back-blue-75-3.png" />
+    <img id="player1card4" src="/cards/back-blue-75-3.png" />
+
+  </div>
+
+  <div id="player2Cards" class="player2Cards">
+
+    <h3 id="player2msg">
+      player 2
+    </h3>
+
+    <img id="player2card0" src="/cards/back-blue-75-3.png" />
+    <img id="player2card1" src="/cards/back-blue-75-3.png" />
+    <img id="player1card2" src="/cards/back-blue-75-3.png" />
+    <img id="player2card3" src="/cards/back-blue-75-3.png" />
+    <img id="player2card4" src="/cards/back-blue-75-3.png" />
+
+  </div>
+
+  <div id="player3Cards" class="player3Cards">
+
+    <h3 id="player3msg">
+      player 3
+    </h3>
+
+    <img id="player3card0" src="/cards/back-blue-75-3.png" />
+    <img id="player3card1" src="/cards/back-blue-75-3.png" />
+    <img id="player3card2" src="/cards/back-blue-75-3.png" />
+    <img id="player3card3" src="/cards/back-blue-75-3.png" />
+    <img id="player3card4" src="/cards/back-blue-75-3.png" />
+
+  </div>
+
+  <div id="player4Cards" class="player4Cards">
+
+    <h3 id="player4msg">
+      player 4
+    </h3>
+
+    <img id="player4card0" src="/cards/back-blue-75-3.png" />
+    <img id="player4card1" src="/cards/back-blue-75-3.png" />
+    <img id="player4card2" src="/cards/back-blue-75-3.png" />
+    <img id="player4card3" src="/cards/back-blue-75-3.png" />
+    <img id="player4card4" src="/cards/back-blue-75-3.png" />
+
+  </div>
+
+  <div id="player5Cards" class="player4Cards">
+
+    <h3 id="player5msg">
+      player 5
+    </h3>
+
+    <img id="player5card0" src="/cards/back-blue-75-3.png" />
+    <img id="player5card1" src="/cards/back-blue-75-3.png" />
+    <img id="player5card2" src="/cards/back-blue-75-3.png" />
+    <img id="player5card3" src="/cards/back-blue-75-3.png" />
+    <img id="player5card4" src="/cards/back-blue-75-3.png" />
+
+  </div>
+
+</body>
+</html>

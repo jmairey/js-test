@@ -9,6 +9,7 @@ var cookieParser = require('cookie-parser');
 var passport = require('passport');
 var PassportLocalStrategy = require('passport-local').Strategy;
 
+var cardDeck = require('./cardDeck');
 
 // okay, sorta kinda start the server code here...
 
@@ -77,11 +78,14 @@ passport.deserializeUser(function(id, cb) {
      'real' server execution actually starts here ?
 */
 
+var gGameState = cardDeck.gGameState;
+/*
 var gGameState = {
     state: -1,
     pot: 0,
     players: [],
 };
+*/
 
 // read in our game and config files or connect to our database if we had one
 

@@ -1,0 +1,43 @@
+
+body {
+  background-color:green;
+}
+
+canvas { 
+  border: 1px solid; 
+}
+
+div.player0Cards {
+  border:3px solid;
+  border-color:black;
+
+  outline-width: 2px;
+  outline-color: white;
+  outline-style: groove;
+
+
+  margin-top: 5px;
+  margin-bottom: 5px;
+
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+
+img.curCard {
+  outline-width: 3px;
+  outline-color: purple;
+  outline-style: groove;
+}
+
+#player0msg {
+  display: inline;
+  vertical-align: top;
+}
+
+.otherPlayerMsg {
+  display: inline;
+  vertical-align: top;
+}
+

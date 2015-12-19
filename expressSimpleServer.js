@@ -9,6 +9,7 @@ var cookieParser = require('cookie-parser');
 var passport = require('passport');
 var PassportLocalStrategy = require('passport-local').Strategy;
 
+var cardDeck = require('./cardDeck');
 
 // okay, sorta kinda start the server code here...
 
@@ -77,11 +78,14 @@ passport.deserializeUser(function(id, cb) {
      'real' server execution actually starts here ?
 */
 
+var gGameState = cardDeck.gGameState;
+/*
 var gGameState = {
     state: -1,
     pot: 0,
     players: [],
 };
+*/
 
 // read in our game and config files or connect to our database if we had one
 
@@ -118,21 +122,25 @@ app.get('/gameloop',function(req, res) {
 
 app.get('/poker',function(req, res) {
   console.log("got a GET request for /poker");
-
   //console.log("__dirname = ",__dirname);
   //  also return user cookie to browser for the session. 
   //  yes, in ths example we use the same html for logging in and when they're logged in
   if (req.user !== undefined){
-      //res.cookie('user', req.user.id);
-      res.cookie('user', req.user.username);
+    //res.cookie('user', req.user.id);
+    res.cookie('user', req.user.username);
+    console.log('/poker: user=', req.user);
+    console.log('/poker: cookies=', req.cookies);
+    console.log('/poker sending MultiPlayer version');
+    res.sendFile(__dirname + '/PokerMultiPlayer.html');
   }
   else {
-      res.cookie('user', 'none');
+    res.cookie('user', 'none');
+    console.log('/poker: user=', req.user);
+    console.log('/poker: cookies=', req.cookies);
+    console.log('/poker sending SinglePlayer version');
+    res.sendFile(__dirname + '/PokerHand.html');
   }
-  console.log('/poker: user=', req.user);
-  console.log('/poker: cookies=', req.cookies);
 
-  res.sendFile(__dirname + '/' + 'PokerHand.html');
 });
 
 app.post('/poker/call', jsonParser, function(req, res) {
@@ -172,7 +180,7 @@ app.post('/login',
 app.get('/logout', function(req, res){
   console.log('Server trying to logout the user...');
   req.logout();
-  res.cookie("user","none");
+  //res.cookie("user","none");
   res.redirect('/poker');
 });
 

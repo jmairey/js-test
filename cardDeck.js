@@ -148,3 +148,7 @@ function deal(hand0, hand1) {
 
   //console.log("gDeck = ",gDeck);
 }
+
+if (exports !== undefined) {
+  exports.gGameState = gGameState;
+}

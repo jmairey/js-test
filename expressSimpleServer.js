@@ -103,6 +103,8 @@ app.use(cookieParser());
 
 app.use(express.static('.')); // serve static files under .  (do we need this to serve javascript files in this main directory?)
 app.use('/cards',express.static('../cardImages/small/75')); // in client code (in html and js) can use 'cards' instead of longer path..
+app.use('/bigtrip',express.static('../web/lindbloom-airey/BigTrip')); // serve bigTrip web page
+app.use('/john',express.static('../web/lindbloom-airey/familyfriends/john')); // serve bigTrip web page
 
 app.use(require('express-session')({ secret: 'change me!', resave: false, saveUninitialized: false }));
 

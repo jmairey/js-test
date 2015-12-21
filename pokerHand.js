@@ -24,7 +24,7 @@ function anteAndDealHands(buttonObj) {
 
     returnDiscards();
 
-    deal(gHand0, gHand1);
+    dealHands(5,2,gHand0, gHand1);
 
     resetCardPositions();
 
@@ -122,7 +122,9 @@ function doneDiscard(buttonObj) {
 }
 
 function analyzeHand(hand){
-  // we assume the hand is sorted..
+
+  // could assume the hand is sorted..
+  hand.sort(cardCompare);
 
   var result = { 
     handType:  -1, 

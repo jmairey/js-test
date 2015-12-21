@@ -132,16 +132,54 @@ function cardCompare(a,b) {
   return gDeckData[a][0] - gDeckData[b][0];
 }
 
-function deal(hand0, hand1) {
+function dealHands(numCards,numHands,hand0, hand1, hand2, hand3, hand4, hand5) {
   //console.log("gDeck = ",gDeck);
   var i;
-  for (i = 0; i < 5; i++) {
-    drawCard(hand0);
-    drawCard(hand1);
+  for (i = 0; i < numCards; i++) {
+    // tempted to use switch statement with fall through... but won't..
+    if (numHands > 0) {
+      drawCard(hand0);
+    }
+    if (numHands > 1) {
+      drawCard(hand1);
+    }
+    if (numHands > 2) {
+      drawCard(hand2);
+    }
+    if (numHands > 3) {
+      drawCard(hand3);
+    }
+    if (numHands > 4) {
+      drawCard(hand4);
+    }
+    if (numHands > 5) {
+      drawCard(hand4);
+    }
   }
 
-  hand0.sort(cardCompare);
-  hand1.sort(cardCompare);
+  if (numHands > 0) {
+    hand0.sort(cardCompare);
+  }
+
+  if (numHands > 1) {
+    hand1.sort(cardCompare);
+  }
+
+  if (numHands > 2) {
+    hand2.sort(cardCompare);
+  }
+
+  if (numHands > 3) {
+    hand3.sort(cardCompare);
+  }
+
+  if (numHands > 4) {
+    hand4.sort(cardCompare);
+  }
+
+  if (numHands > 5) {
+    hand5.sort(cardCompare);
+  }
 
   //console.log(hand0);
   //console.log(hand1);

@@ -5,11 +5,16 @@
 
   <link rel="stylesheet" type="text/css" href="PokerMultiPlayer.css"> 
 
-  <script type="text/javascript" src="authentication.js">
+  <script type="text/javascript" src="cardDeck.js">
+  <!--  //a shared file between client and server 
+        //-->
   </script>
 
-  <script>
+  <script type="text/javascript" src="authentication.js">
     window.onload =authenticationInit;
+  </script>
+
+  <script type="text/javascript" src="pokerMultiPlayer.js">
   </script>
 
 
@@ -55,11 +60,11 @@
   </div>
   <div id="playButtons">
     <form>
-      <input type="button" value="Start: Ante and Deal Hands" onclick="anteAndDealHands(this);" />
-      <input type="button" value="Discard Selected Card" onclick="discardCurrentCard(this);" />
-      <input type="button" value="Done Discard" onclick="doneDiscard(this);" />
-      <input type="button" value="Fold" onclick="foldHand(this);" />
-      <input type="button" value="Call" onclick="callGame(this);" />
+      <input id= "playButton0" type="button" value="Join Next Hand" onclick="joinGame(this);" />
+      <input id= "playButton1" type="button" value="Discard Selected Card" onclick="discardCurrentCard(this);" />
+      <input id= "playButton2" type="button" value="Done Discard" onclick="doneDiscard(this);" />
+      <input id= "playButton3" type="button" value="Fold" onclick="foldHand(this);" />
+      <input id= "playButton4" type="button" value="Call" onclick="callGame(this);" />
     </form>
   </div>
 

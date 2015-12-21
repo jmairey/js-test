@@ -124,6 +124,9 @@ function returnDiscards() {
   }
   gDiscards = [];
 
+  function indexCompare(a,b) {
+    return a - b;
+  }
 
   gDeck.sort(indexCompare);
 }
@@ -185,6 +188,233 @@ function dealHands(numCards,numHands,hand0, hand1, hand2, hand3, hand4, hand5) {
   //console.log(hand1);
 
   //console.log("gDeck = ",gDeck);
+}
+
+function analyzeHand(hand){
+
+  // could assume the hand is sorted..
+  hand.sort(cardCompare);
+
+  var result = { 
+    handType:  -1, 
+    handRank:  -1,
+    handRank2: -1, // rank of the low pair in a full house or two pair
+    card0: -1,
+    card1: -1,
+    card2: -1,
+    card3: -1,
+    card4: -1,
+  };
+
+
+  // using javascript property of variables being undefined by default which is 'falsy'
+  var pair1; // starts out undefined...
+  var pair2;
+  var pair3;
+  var pair4;
+
+  var twopair1;
+  var twopair2;
+  var twopair3;
+
+  var triple1;
+  var triple2;
+  var triple3;
+
+  var flush;
+
+  var straight;
+
+
+  // have at least a single high card
+  result.handType = 0;
+  result.handRank = gDeckData[hand[4]][0];
+  result.card0 = hand[4];
+
+  // look for pairs first, then build bottom up from there
+  if (gDeckData[hand[0]][0] === gDeckData[hand[1]][0]){
+    pair1 = true;
+    result.handType = 1;
+    result.handRank = gDeckData[hand[0]][0];
+    result.card0 = hand[0];
+    result.card1 = hand[1];
+  }
+
+  if (gDeckData[hand[1]][0] === gDeckData[hand[2]][0]){
+    pair2 = true;
+    result.handType = 1;
+    result.handRank = gDeckData[hand[1]][0];
+    result.card0 = hand[1];
+    result.card1 = hand[2];
+  }
+
+  if (gDeckData[hand[2]][0] === gDeckData[hand[3]][0]){
+    pair3 = true;
+    result.handType = 1;
+    result.handRank = gDeckData[hand[2]][0];
+    result.card0 = hand[2];
+    result.card1 = hand[3];
+  }
+
+  if (gDeckData[hand[3]][0] === gDeckData[hand[4]][0]){
+    pair4 = true;
+    result.handType = 1;
+    result.handRank = gDeckData[hand[3]][0];
+    result.card0 = hand[3];
+    result.card1 = hand[4];
+  }
+
+  // two pairs ?
+  if (pair1 && pair3) {
+    result.handType = 2;
+    result.handRank = gDeckData[hand[2]][0];
+    result.handRank2 = gDeckData[hand[0]][0];
+    result.card0 = hand[0];
+    result.card1 = hand[1];
+    result.card2 = hand[2];
+    result.card3 = hand[3];
+  }
+
+  if (pair2 && pair4) {
+    result.handType = 2;
+    result.handRank = gDeckData[hand[3]][0];
+    result.handRank2 = gDeckData[hand[1]][0];
+    result.card0 = hand[1];
+    result.card1 = hand[2];
+    result.card2 = hand[3];
+    result.card3 = hand[4];
+  }
+  
+  if (pair1 && pair4) {
+    result.handType = 2;
+    result.handRank = gDeckData[hand[3]][0];
+    result.handRank2 = gDeckData[hand[0]][0];
+    result.card0 = hand[0];
+    result.card1 = hand[1];
+    result.card2 = hand[3];
+    result.card3 = hand[4];
+  }
+
+  // three of a kind ?
+  if (pair1 && pair2) {
+    triple1 = true;
+    result.handType = 3;
+    result.handRank = gDeckData[hand[0]][0];
+    result.card0 = hand[0];
+    result.card1 = hand[1];
+    result.card2 = hand[2];
+  }
+  if (pair2 && pair3) {
+    triple2 = true;
+    result.handType = 3;
+    result.handRank = gDeckData[hand[1]][0];
+    result.card0 = hand[1];
+    result.card1 = hand[2];
+    result.card2 = hand[3];
+  }
+  if (pair3 && pair4) {
+    triple3 = true;
+    result.handType = 3;
+    result.handRank = gDeckData[hand[2]][0];
+    result.card0 = hand[2];
+    result.card1 = hand[3];
+    result.card2 = hand[4];
+  }
+
+  // full house ?
+  if (pair1 && triple3){
+    result.handType = 6;
+    result.handRank = gDeckData[hand[2]][0];
+    result.handRank2 = gDeckData[hand[0]][0];
+    result.card0 = hand[0]; 
+    result.card1 = hand[1];
+    result.card2 = hand[2];
+    result.card3 = hand[3];
+    result.card4 = hand[4];
+  }
+  if (triple1 && pair4){
+    result.handType = 6;
+    result.handRank = gDeckData[hand[0]][0];
+    result.handRank2 = gDeckData[hand[3]][0];
+    result.card0 = hand[0]; 
+    result.card1 = hand[1];
+    result.card2 = hand[2];
+    result.card3 = hand[3];
+    result.card4 = hand[4];
+  }
+
+  // straight ?
+  if (gDeckData[hand[0]][0] === gDeckData[hand[1]][0] - 1 &&
+      gDeckData[hand[1]][0] === gDeckData[hand[2]][0] - 1 &&
+      gDeckData[hand[2]][0] === gDeckData[hand[3]][0] - 1 &&
+      gDeckData[hand[3]][0] === gDeckData[hand[4]][0] - 1) {
+    straight = true;
+    result.handType = 4;
+    result.handRank = gDeckData[hand[4]][0];
+    result.handRank2 = gDeckData[hand[3]][0];
+    result.card0 = hand[0];  
+    result.card1 = hand[1];
+    result.card2 = hand[2];
+    result.card3 = hand[3];
+    result.card4 = hand[4];
+  }
+  // ace low straight
+  if (gDeckData[hand[0]][0] === 13 &&
+      gDeckData[hand[1]][0] ===  1 &&
+      gDeckData[hand[2]][0] ===  2 &&
+      gDeckData[hand[3]][0] ===  3 &&
+      gDeckData[hand[4]][0] ===  4) {
+    straight = true;
+    result.handType = 4;
+    result.handRank = gDeckData[hand[0]][0];
+    result.handRank2 = gDeckData[hand[4]][0];
+    result.card0 = hand[0]; 
+    result.card1 = hand[1];
+    result.card2 = hand[2];
+    result.card3 = hand[3];
+    result.card4 = hand[4];
+  }
+
+  // flush ?
+  if (gDeckData[hand[0]][1] === gDeckData[hand[1]][1] &&
+      gDeckData[hand[1]][1] === gDeckData[hand[2]][1] &&
+      gDeckData[hand[2]][1] === gDeckData[hand[3]][1] &&
+      gDeckData[hand[3]][1] === gDeckData[hand[4]][1]) {
+    flush = true;
+    result.handType = 5;
+    result.handRank = gDeckData[hand[4]][0];
+    result.card0 = hand[0];   // start with highest value card?
+    result.card1 = hand[1];
+    result.card2 = hand[2];
+    result.card3 = hand[3];
+    result.card4 = hand[4];
+  }
+
+
+  // straight flush ?
+  if (straight && flush) {
+    result.handType = 8;
+    result.handRank = gDeckData[hand[1]][0];
+  }
+  // four of a kind ? (use else-if since we checked for straight flush)
+  else if (pair1 && pair2 && pair3) { 
+    result.handType = 7;
+    result.handRank = gDeckData[hand[0]][0];
+    result.card0 = hand[0];
+    result.card1 = hand[1];
+    result.card2 = hand[2];
+    result.card3 = hand[3];
+  } else if (pair2 && pair3 && pair4) {
+    result.handType = 7;
+    result.handRank = gDeckData[hand[1]][0];
+    result.card0 = hand[1];
+    result.card1 = hand[2];
+    result.card2 = hand[3];
+    result.card3 = hand[4];
+  }
+
+  return result;
+
 }
 
 if (exports !== undefined) {

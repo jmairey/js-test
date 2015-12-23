@@ -5,42 +5,42 @@
       "password" : "pw1",
       "id": 1,
       "wallet": 100,
-      "playing": false
+      "playing": -1
     },
     {
       "username" : "sam",
       "password" : "pw2",
       "id": 2,
       "wallet": 100,
-      "playing": false
+      "playing": -1
     },
     {
       "username" : "john",
       "password" : "pw3",
       "id": 3,
       "wallet": 100,
-      "playing": false
+      "playing": -1
     },
     {
       "username" : "mj",
       "password" : "pw4",
       "id": 4,
       "wallet": 100,
-      "playing": false
+      "playing": -1
     },
     {
       "username" : "taylor",
       "password" : "pw5",
       "id": 5,
       "wallet": 100,
-      "playing": false
+      "playing": -1
     },
     {
       "username" : "jordan",
       "password" : "pw6",
       "id": 6,
       "wallet": 100,
-      "playing": false
+      "playing": -1
     }
   ]
 }

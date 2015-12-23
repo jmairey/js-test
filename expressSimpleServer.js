@@ -239,27 +239,25 @@ app.all('/json/:cmd', function(request, response){
   }
 });
 
-app.get('/list_user', function(req, res) {
-  console.log("\ngot a GET request for /list_user");
-  fs.readFile(__dirname + '/users.json', 'utf8', function(err, data) {
-
-    // since our file is already json, we don't have to parse it. although we could..
-
-    //var json = JSON.parse(data);
-    //var jsonString = JSON.stringify(json);
-    //res.end(jsonString);
-
-    res.end(data);
-  });
-  //res.send('Page Listing');
+app.get('/gamestate', function(req, res) {
+  console.log("\ngot a GET request for /gamestate");
+  var jsonString = JSON.stringify(gGameState);
+  res.end(jsonString);
 });
 
-// This responds with the cookies when asked for /
-app.get('/', function(req, res) {
+// This responds with the browser session cookies when asked for /cookies
+app.get('/cookies', function(req, res) {
   console.log("Got a GET request for the homepage");
   console.log("Cookies: ", req.cookies);
   //res.send('Hello GET');
   res.end(JSON.stringify(req.cookies));
+});
+
+// This responds with... something.. to show we are alive
+app.get('/', function(req, res) {
+  console.log("Got a GET request for the homepage");
+  //res.send('Hello GET');
+  res.end(JSON.stringify({ proudlyServing: "quality bits since late 2015" }));
 });
 
 var server = app.listen(8081, function() {

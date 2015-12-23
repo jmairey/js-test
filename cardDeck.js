@@ -1,18 +1,30 @@
+//
+// this file is loaded by both the server for multiplayer games and the browser
+// for single player games. obviously the single player games could run on 
+// a server too but.. why not just do it all on the client device and 
+// experiment with trying to share some code between node server and browser client
 
+// this is the object that holds the current state of the game
 var gGameState = {
     state: -1,
     pot: 0,
     wallet: 100,
-    players: [],
+    players: [],  // maps to the file users.json
 };
-var gDeckData;
-var gCardsLeftInDeck=52;
 
-var gHand0 = [];
+// maximum of six players (for now) in a 'game'
+var gHand0 = []; // will hold indices taken out of gDeck
 var gHand1 = [];
+var gHand2 = [];
+var gHand3 = [];
+var gHand4 = [];
+var gHand5 = [];
 
-var gDiscards = [];
+var gDiscards = []; // will hold indices taken from hands
 
+// indexes into gDeckData array. 
+// this is really the model of the card deck. "cards" move from here
+// into hands, then into gDiscards, then back here.
 var gDeck = [
  0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12,
 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25,
@@ -20,15 +32,22 @@ var gDeck = [
 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51,
 52,53,
 ];
+var gCardsLeftInDeck=52;
 
-gCardValueIndex = 0;
-gCardSuitIndex = 1;
-gCardNameIndex = 2;
-gCardFilenameIndex = 3;
+// also could have used an array of objects rather than array of arrays
+// just keeping it simple for now.
+var gCardValueIndex = 0;
+var gCardSuitIndex = 1;
+var gCardNameIndex = 2;
+var gCardFilenameIndex = 3;
 
-gPrefix = '/cards/';
-gSuffix = '-75.png';
-gDeckData = [
+// this data should be read-only. the gDeck array indexes into this array
+// and represents the movement of cards from deck to hands to discard and 
+// back into the deck. shuffling and dealing is simulated by choosing a random
+// element/index/card from gDeck and putting it into one of six hands.
+var gPrefix = '/cards/';
+var gSuffix = '-75.png';
+var gDeckData = [
 
 [13, 'clubs',    'Ace of Clubs',     gPrefix+'clubs-a'+gSuffix ],
 [ 1, 'clubs',    'Two of Clubs',     gPrefix+'clubs-2'+gSuffix ],

@@ -37,18 +37,17 @@ function authenticationInit() {
   }
 
   getButton.onclick = function() {
-    var cmd = "getMsg";
+    var cmd = 'getMsg';
     var xhr = new XMLHttpRequest();
-    var url = "/json/" + cmd;
-    xhr.open("POST", url, true);
+    var url = '/json/' + cmd;
+    xhr.open('POST', url, true);
     xhr.onload = function(xmlEvent) {
         var responseObject = JSON.parse(xhr.response);
-        if ("err" in responseObject) {
-            console.log("getMsg: err = ", responseObject.err);
+        if ('err' in responseObject) {
+            console.log('getMsg: err = ', responseObject.err);
             messageText.value = 'could not get msg...';
-        }
-        else {
-            console.log("getMsg: result = " + responseObject.result);
+        } else {
+            console.log('getMsg: result = ' + responseObject.result);
             messageText.value = responseObject.result;
         }
     };
@@ -56,19 +55,18 @@ function authenticationInit() {
   };
 
   setButton.onclick = function() {
-    var cmd = "setMsg";
+    var cmd = 'setMsg';
     var xhr = new XMLHttpRequest();
-    var url = "/json/" + cmd + '?' + 'msg=' + messageText.value;
-    xhr.open("POST", url, true);
+    var url = '/json/' + cmd + '?' + 'msg=' + messageText.value;
+    xhr.open('POST', url, true);
     xhr.onload = function(xmlEvent) {
       var responseObject = JSON.parse(xhr.response);
-      if ("err" in responseObject) {
+      if ('err' in responseObject) {
         console.log(responseObject.err);
-        console.log("setMsg: err = " + responseObject.err);
+        console.log('setMsg: err = ' + responseObject.err);
         messageText.value = responseObject.err;
-      }
-      else {
-        console.log("setMsg: result = " + responseObject.result);
+      } else {
+        console.log('setMsg: result = ' + responseObject.result);
         messageText.value = responseObject.result;
       }
     };

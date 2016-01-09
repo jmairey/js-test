@@ -212,12 +212,32 @@ function getMsg(args, user, response) {
     if (err) {
       response.write(JSON.stringify({'err':err}));
       response.end();
-    }
-    else {
+    } else {
       response.write(JSON.stringify({'result':data.toString()}));
       response.end();
     }
   });
+}
+
+function joinGame(args, user, response) {
+  console.log('joinGame: user = ',user);
+
+  if (user.playing === -1) {
+    user.playing = 0;
+  } else if (user.playing === 0) {
+    user.playing = -1;
+  }
+  else {
+    user.playing = -1;
+  }
+
+  if (0) {
+    response.write(JSON.stringify({'err':'error'}));
+    response.end();
+  } else {
+    response.write(JSON.stringify({'result':gGameState}));
+    response.end();
+  }
 }
 
 app.all('/json/:cmd', function(request, response){
@@ -232,6 +252,8 @@ app.all('/json/:cmd', function(request, response){
     setMsg(args, user, response);
   } else if (request.params.cmd === 'getMsg') {
     getMsg(args, user, response);
+  } else if (request.params.cmd === 'joinGame') {
+    joinGame(args, user, response);
   } else {
     console.log('cmdHander unknown cmd: ', request.params.cmd);
     response.write(JSON.stringify({'err':'unkown cmd'}));

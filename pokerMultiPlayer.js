@@ -13,7 +13,13 @@ function joinGame(buttonObj) {
       messageText.value = 'could not join game...';
     } else {
       console.log('joinGame: result = ' + responseObject.result);
-      messageText.value = 'joined game!';
+      if (buttonObj.value === 'Join Next Hand') {
+        messageText.value = 'joined game!';
+        buttonObj.value = 'leave game'
+      } else {
+        messageText.value = 'left game!';
+        buttonObj.value = 'Join Next Hand';
+      }
     }
   };
   xhr.send();

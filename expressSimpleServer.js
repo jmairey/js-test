@@ -69,7 +69,7 @@ passport.deserializeUser(function(id, cb) {
     user = gGameState.players[id-1];
   }
 
-  console.log(' passport.deSerializeUser called: id=',id,' user=',user);
+  //console.log(' passport.deSerializeUser called: id=',id,' user=',user);
 
   cb(null, user);
 });
@@ -220,7 +220,6 @@ function getMsg(args, user, response) {
 }
 
 function joinGame(args, user, response) {
-  console.log('joinGame: user = ',user);
 
   if (user.playing === -1) {
     user.playing = 0;
@@ -238,6 +237,8 @@ function joinGame(args, user, response) {
     response.write(JSON.stringify({'result':gGameState}));
     response.end();
   }
+
+  console.log('joinGame: user = ',user);
 }
 
 app.all('/json/:cmd', function(request, response){

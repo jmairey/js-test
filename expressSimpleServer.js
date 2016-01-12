@@ -241,6 +241,19 @@ function joinGame(args, user, response) {
   console.log('joinGame: user = ',user);
 }
 
+function getGamestate(args, user, response) {
+
+  if (0) {
+    response.write(JSON.stringify({'err':'error'}));
+    response.end();
+  } else {
+    response.write(JSON.stringify({'result':gGameState}));
+    response.end();
+  }
+
+  console.log('getGamestate: user = ',user);
+}
+
 app.all('/json/:cmd', function(request, response){
   // all /json/*,  so both post + get
 
@@ -255,6 +268,8 @@ app.all('/json/:cmd', function(request, response){
     getMsg(args, user, response);
   } else if (request.params.cmd === 'joinGame') {
     joinGame(args, user, response);
+  } else if (request.params.cmd === 'getGamestate') {
+    getGamestate(args, user, response);
   } else {
     console.log('cmdHander unknown cmd: ', request.params.cmd);
     response.write(JSON.stringify({'err':'unkown cmd'}));
@@ -262,6 +277,8 @@ app.all('/json/:cmd', function(request, response){
   }
 });
 
+// just for debugging, to see the current gamestate
+// and to know that we can get the current gamestate, :-)
 app.get('/gamestate', function(req, res) {
   console.log("\ngot a GET request for /gamestate");
   var jsonString = JSON.stringify(gGameState);

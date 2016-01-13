@@ -1,7 +1,5 @@
 //'use strict';
 
-var gXHR;
-
 var gPlayer0Cards;
 var gCard0;
 var gCard1;
@@ -19,12 +17,12 @@ function anteAndDealHands(buttonObj) {
   //alert(buttonObj.value);
 
   if (gGameState.state === -1) {
-    discardHand(gHand0);
-    discardHand(gHand1);
+    discardHand(gGameState.players[0].hand);
+    discardHand(gGameState.players[1].hand);
 
     returnDiscards();
 
-    dealHands(5,2,gHand0, gHand1);
+    dealHands(5,2,gGameState.players[0].hand, gGameState.players[1].hand);
 
     resetCardPositions();
 
@@ -49,38 +47,38 @@ function discardCurrentCard(buttonObj) {
     if (gCurCard) {
       if        (gCurCard === gCard0) {
         //alert("discard Card 0");
-        if (gHand0[0] < 52) {
+        if (gGameState.players[0].hand[0] < 52) {
           gCard0.src = gPrefix+"back-blue-75-3.png";
-          gDiscards.push(gHand0[0]);
-          gHand0[0] = 52;
+          gGameState.discards.push(gGameState.players[0].hand[0]);
+          gGameState.players[0].hand[0] = 52;
         }
       } else if (gCurCard === gCard1) {
         //alert("discard Card 1");
-        if (gHand0[1] < 52) {
+        if (gGameState.players[0].hand[1] < 52) {
           gCard1.src = gPrefix+"back-blue-75-3.png";
-          gDiscards.push(gHand0[1]);
-          gHand0[1] = 52;
+          gGameState.discards.push(gGameState.players[0].hand[1]);
+          gGameState.players[0].hand[1] = 52;
         }
       } else if (gCurCard === gCard2) {
         //alert("discard Card 2");
-        if (gHand0[2] < 52) {
+        if (gGameState.players[0].hand[2] < 52) {
           gCard2.src = gPrefix+"back-blue-75-3.png";
-          gDiscards.push(gHand0[2]);
-          gHand0[2] = 52;
+          gGameState.discards.push(gGameState.players[0].hand[2]);
+          gGameState.players[0].hand[2] = 52;
         }
       } else if (gCurCard === gCard3) {
         //alert("discard Card 3");
-        if (gHand0[3] < 52) {
+        if (gGameState.players[0].hand[3] < 52) {
           gCard3.src = gPrefix+"back-blue-75-3.png";
-          gDiscards.push(gHand0[3]);
-          gHand0[3] = 52;
+          gGameState.discards.push(gGameState.players[0].hand[3]);
+          gGameState.players[0].hand[3] = 52;
         }
       } else if (gCurCard === gCard4) {
         //alert("discard Card 4");
-        if (gHand0[4] < 52) {
+        if (gGameState.players[0].hand[4] < 52) {
           gCard4.src = gPrefix+"back-blue-75-3.png";
-          gDiscards.push(gHand0[4]);
-          gHand0[4] = 52;
+          gGameState.discards.push(gGameState.players[0].hand[4]);
+          gGameState.players[0].hand[4] = 52;
         }
       }
     }
@@ -97,27 +95,27 @@ function doneDiscard(buttonObj) {
     var i;
     var cardIndex;
     for (i = 0; i < 5; i++) {
-      if (gHand0[i] === 52) {
-        cardIndex = Math.floor(Math.random()*gCardsLeftInDeck);
+      if (gGameState.players[0].hand[i] === 52) {
+        cardIndex = Math.floor(Math.random()*gGameState.cardsLeftInDeck);
 
-        if (cardIndex !== gCardsLeftInDeck) {
-          gHand0[i] = gDeck.splice(cardIndex,1)[0];
-          gCardsLeftInDeck -= 1;
+        if (cardIndex !== gGameState.cardsLeftInDeck) {
+          gGameState.players[0].hand[i] = gGameState.deck.splice(cardIndex,1)[0];
+          gGameState.cardsLeftInDeck -= 1;
         }
       }
     }
 
-    gHand0.sort(cardCompare);
+    gGameState.players[0].hand.sort(cardCompare);
 
     resetCardPositions();
 
     gGameState.state = 2;
 
-    //console.log('deck = ', gDeck);
-    //console.log('hand0 = ', gHand0);
-    //console.log('hand1 = ', gHand1);
+    //console.log('deck = ', gGameState.deck);
+    //console.log('hand0 = ', gGameState.players[0].hand);
+    //console.log('hand1 = ', gGameState.players[1].hand);
 
-    // should assert that ghand0, ghand1 and gDeck make a complete deck?
+    // should assert that ghand0, ghand1 and gGameState.deck make a complete deck?
   }
 }
 
@@ -189,61 +187,61 @@ function resetCardPositions() {
   img.style.position= 'relative'; 
   img.style.left = '0px'; 
   img.style.bottom = '0px'; 
-  if (gHand0) {
-    img.src = gDeckData[gHand0[0]][3];
+  if (gGameState.players[0].hand) {
+    img.src = gDeckData[gGameState.players[0].hand[0]][3];
   }
 
   img = document.getElementById('card1');
   img.style.position= 'relative'; 
   img.style.left = '0px'; 
   img.style.bottom = '0px'; 
-  if (gHand0) {
-    img.src = gDeckData[gHand0[1]][3];
+  if (gGameState.players[0].hand) {
+    img.src = gDeckData[gGameState.players[0].hand[1]][3];
   }
 
   img = document.getElementById('card2');
   img.style.position= 'relative'; 
   img.style.left = '0px'; 
   img.style.bottom = '0px'; 
-  if (gHand0) {
-    img.src = gDeckData[gHand0[2]][3];
+  if (gGameState.players[0].hand) {
+    img.src = gDeckData[gGameState.players[0].hand[2]][3];
   }
 
   img = document.getElementById('card3');
   img.style.position= 'relative'; 
   img.style.left = '0px'; 
   img.style.bottom = '0px'; 
-  if (gHand0) {
-    img.src = gDeckData[gHand0[3]][3];
+  if (gGameState.players[0].hand) {
+    img.src = gDeckData[gGameState.players[0].hand[3]][3];
   }
 
   img = document.getElementById('card4');
   img.style.position= 'relative'; 
   img.style.left = '0px'; 
   img.style.bottom = '0px'; 
-  if (gHand0) {
-    img.src = gDeckData[gHand0[4]][3];
+  if (gGameState.players[0].hand) {
+    img.src = gDeckData[gGameState.players[0].hand[4]][3];
   }
 
   img = document.getElementById('player1card0');
   //img.src = "../cardImages/small/75/back-blue-75-3.png";
-  img.src = gDeckData[gHand1[0]][3];
+  img.src = gDeckData[gGameState.players[1].hand[0]][3];
 
   img = document.getElementById('player1card1');
   //img.src = "../cardImages/small/75/back-blue-75-3.png";
-  img.src = gDeckData[gHand1[1]][3];
+  img.src = gDeckData[gGameState.players[1].hand[1]][3];
 
   img = document.getElementById('player1card2');
   //img.src = "../cardImages/small/75/back-blue-75-3.png";
-  img.src = gDeckData[gHand1[2]][3];
+  img.src = gDeckData[gGameState.players[1].hand[2]][3];
 
   img = document.getElementById('player1card3');
   //img.src = "../cardImages/small/75/back-blue-75-3.png";
-  img.src = gDeckData[gHand1[3]][3];
+  img.src = gDeckData[gGameState.players[1].hand[3]][3];
 
   img = document.getElementById('player1card4');
   //img.src = "../cardImages/small/75/back-blue-75-3.png";
-  img.src = gDeckData[gHand1[4]][3];
+  img.src = gDeckData[gGameState.players[1].hand[4]][3];
 
   setOrToggleCurrentCard(gCurCard);
 }
@@ -257,10 +255,10 @@ function callGame(buttonObj){
   if (gGameState.state === 2) {
     resetCardPositions();
 
-    var player0Result = analyzeHand(gHand0);
+    var player0Result = analyzeHand(gGameState.players[0].hand);
     setResultHTML(player0Result,document.getElementById('player0Result'));
 
-    var computerResult = analyzeHand(gHand1);
+    var computerResult = analyzeHand(gGameState.players[1].hand);
     setResultHTML(computerResult,document.getElementById('computerResult'));
 
     var gameDirections = document.getElementById("gameDirections");
@@ -301,13 +299,13 @@ function callGame(buttonObj){
         gameDirectionText = '! need to fix a bug in our code to figure out who won...';
     }
 
-    var gXHR = new XMLHttpRequest();
-    gXHR.open("POST", "/poker/call");
-    gXHR.setRequestHeader('Content-Type', 'application/json'); // seems needed
-    gXHR.onreadystatechange = function() {
-      if (gXHR.readyState===4 && gXHR.status===200){
-        var jsonObj = JSON.parse(gXHR.responseText);
-        //console.log(gXHR.responseText);
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/poker/call");
+    xhr.setRequestHeader('Content-Type', 'application/json'); // seems needed
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState===4 && xhr.status===200){
+        var jsonObj = JSON.parse(xhr.responseText);
+        //console.log(xhr.responseText);
         console.log(' response from server:',jsonObj);
         gGameState.wallet = jsonObj.wallet;
         gameDirections.innerHTML = gameDirectionText + jsonObj.andSomeOtherData;
@@ -317,7 +315,7 @@ function callGame(buttonObj){
     };
     var someData = { wallet: gGameState.wallet };
     var jsonString = JSON.stringify(someData);
-    gXHR.send(jsonString);
+    xhr.send(jsonString);
 
 
     gGameState.state = -1;
@@ -444,6 +442,24 @@ function init(){
 
   authenticationInit();
 
+  gGameState.players[0] = {  
+    username: 'you',
+    password: 'none',
+    id: 1,
+    wallet: 100,
+    playing: 0,
+    hand: [],
+  };
+
+  gGameState.players[1] = {  
+    username: 'computer one',
+    password: 'none',
+    id: 1,
+    wallet: 100,
+    playing: 0,
+    hand: [],
+  };
+
   img = document.getElementById('card0');
   img.style.position= 'relative'; 
   img.style.left = '0px'; 
@@ -477,13 +493,13 @@ function init(){
   gPlayer0Cards = document.getElementById('player0Cards');
 
   /*
-  gXHR = new XMLHttpRequest();
+  var xhr = new XMLHttpRequest();
 
-  gXHR.onreadystatechange = function() {
-    if (gXHR.readyState === 4 && gXHR.status === 200) {
-      //console.log(gXHR.responseText);
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState === 4 && xhr.status === 200) {
+      //console.log(xhr.responseText);
 
-      var jsonObj = JSON.parse(gXHR.responseText);
+      var jsonObj = JSON.parse(xhr.responseText);
 
       console.log(jsonObj);
 
@@ -503,16 +519,16 @@ function init(){
       gameDirections.innerHTML = gameDirectionsText;
 
     } else {
-      console.log('readyState = ',gXHR.readyState);
-      console.log('status = ',gXHR.status);
+      console.log('readyState = ',xhr.readyState);
+      console.log('status = ',xhr.status);
     }
   };
 
-  gXHR.open('GET', '/list_user', true);
+  xhr.open('GET', '/list_user', true);
 
-  //gXHR.setRequestHeader('Content-Type', 'application/json'); // not necessary?
+  //xhr.setRequestHeader('Content-Type', 'application/json'); // not necessary?
 
-  gXHR.send();
+  xhr.send();
   */
 
 

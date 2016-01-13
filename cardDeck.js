@@ -6,33 +6,29 @@
 
 // this is the object that holds the current state of the game
 var gGameState = {
-    state: -1,
-    pot: 0,
-    wallet: 100,
-    players: [],  // maps to the file users.json
+  state: -1,
+  pot: 0,
+  wallet: 100,
+
+  cardsLeftInDeck:52,
+
+  // indexes into the (read-only) gDeckData array. 
+  // this is really the model of the card deck. "cards" move from here
+  // into player[i].hand, then into gGameState.discards, then back here.
+  deck: [
+   0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12,
+  13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25,
+  26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38,
+  39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51,
+  52,53,
+  ],
+
+  discards: [], // will hold indices taken from players[i].hand
+
+  // maximum of six players (for now) in a 'game'
+  // players[i].hand = []; // will hold indices taken out of gDeck
+  players: [],  // maps to the file users.json for multiplayer. initialized in singleplayer
 };
-
-// maximum of six players (for now) in a 'game'
-var gHand0 = []; // will hold indices taken out of gDeck
-var gHand1 = [];
-var gHand2 = [];
-var gHand3 = [];
-var gHand4 = [];
-var gHand5 = [];
-
-var gDiscards = []; // will hold indices taken from hands
-
-// indexes into gDeckData array. 
-// this is really the model of the card deck. "cards" move from here
-// into hands, then into gDiscards, then back here.
-var gDeck = [
- 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12,
-13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25,
-26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38,
-39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51,
-52,53,
-];
-var gCardsLeftInDeck=52;
 
 // also could have used an array of objects rather than array of arrays
 // just keeping it simple for now.
@@ -41,10 +37,11 @@ var gCardSuitIndex = 1;
 var gCardNameIndex = 2;
 var gCardFilenameIndex = 3;
 
-// this data should be read-only. the gDeck array indexes into this array
-// and represents the movement of cards from deck to hands to discard and 
+// this data should be read-only (does not need to be in gGameState). 
+// the gGameState.deck array indexes into the read-only gDeckData array.
+// and represents the movement of cards from gGameState.deck to hands to discard and 
 // back into the deck. shuffling and dealing is simulated by choosing a random
-// element/index/card from gDeck and putting it into one of six hands.
+// element/index/card from gGameState.deck and putting it into one of six hands.
 var gPrefix = '/cards/';
 var gSuffix = '-75.png';
 var gDeckData = [
@@ -111,13 +108,13 @@ var gDeckData = [
 ];
 
 function drawCard(hand) {
-  var cardIndex = Math.floor(Math.random()*gCardsLeftInDeck);
+  var cardIndex = Math.floor(Math.random()*gGameState.cardsLeftInDeck);
 
-  if (cardIndex === gCardsLeftInDeck) {
+  if (cardIndex === gGameState.cardsLeftInDeck) {
     hand.push(52); // joker. should never happen
   } else {
-    hand.push(gDeck.splice(cardIndex,1)[0]);
-    gCardsLeftInDeck -= 1;
+    hand.push(gGameState.deck.splice(cardIndex,1)[0]);
+    gGameState.cardsLeftInDeck -= 1;
   }
 
   //console.log('cardIndex = ', cardIndex);
@@ -126,7 +123,7 @@ function drawCard(hand) {
 
 function discardHand(hand) {
   if (hand && hand.length === 5) {
-    gDiscards.push(hand[0],hand[1],hand[2],hand[3],hand[4]);
+    gGameState.discards.push(hand[0],hand[1],hand[2],hand[3],hand[4]);
     hand.pop(); 
     hand.pop(); 
     hand.pop(); 
@@ -137,17 +134,17 @@ function discardHand(hand) {
 
 function returnDiscards() {
   var i;
-  for (i = 0; i < gDiscards.length; i++) {
-    gDeck.splice(0,0,gDiscards[i]); // can't just push, want them ahead of the jokers
-    gCardsLeftInDeck += 1;
+  for (i = 0; i < gGameState.discards.length; i++) {
+    gGameState.deck.splice(0,0,gGameState.discards[i]); // can't just push, want them ahead of the jokers
+    gGameState.cardsLeftInDeck += 1;
   }
-  gDiscards = [];
+  gGameState.discards = [];
 
   function indexCompare(a,b) {
     return a - b;
   }
 
-  gDeck.sort(indexCompare);
+  gGameState.deck.sort(indexCompare);
 }
 
 function cardCompare(a,b) {
@@ -155,7 +152,7 @@ function cardCompare(a,b) {
 }
 
 function dealHands(numCards,numHands,hand0, hand1, hand2, hand3, hand4, hand5) {
-  //console.log("gDeck = ",gDeck);
+  //console.log("gGameState.deck = ",gGameState.deck);
   var i;
   for (i = 0; i < numCards; i++) {
     // tempted to use switch statement with fall through... but won't..
@@ -206,7 +203,7 @@ function dealHands(numCards,numHands,hand0, hand1, hand2, hand3, hand4, hand5) {
   //console.log(hand0);
   //console.log(hand1);
 
-  //console.log("gDeck = ",gDeck);
+  //console.log("gGameState.deck = ",gGameState.deck);
 }
 
 function analyzeHand(hand){

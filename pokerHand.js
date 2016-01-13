@@ -28,8 +28,9 @@ function anteAndDealHands(buttonObj) {
 
     var gameDirectionsText = "select cards to discard then hit Call or Fold..."
     gGameState.pot = 2*5; // two players ante
-    gGameState.wallet -= 5;
-    gameDirectionsText += 'wallet ' + gGameState.wallet + ' pot ' + gGameState.pot;
+    gGameState.players[0].wallet -= 5;
+    gGameState.players[1].wallet -= 5;
+    gameDirectionsText += 'wallet ' + gGameState.players[0].wallet + ' pot ' + gGameState.pot;
 
     gGameState.state = 2;
 
@@ -266,34 +267,38 @@ function callGame(buttonObj){
       if (player0Result.handRank === computerResult.handRank) {
         if (player0Result.handRank2 === computerResult.handRank2) {
           gameDirectionText = 'split the pot...';
-          gGameState.wallet += gGameState.pot/2;
+          gGameState.players[0].wallet += gGameState.pot/2;
+          gGameState.players[1].wallet += gGameState.pot/2;
           gGameState.pot = 0; 
         } else if (player0Result.handRank2 > computerResult.handRank2) {
           gameDirectionText = 'you won with ' + document.getElementById('player0Result').innerText;
-          gGameState.wallet += gGameState.pot;
+          gGameState.players[0].wallet += gGameState.pot;
           gGameState.pot = 0; 
         } else if (player0Result.handRank2 < computerResult.handRank2) {
           gameDirectionText = 'you lost against ' + document.getElementById('computerResult').innerText;
+          gGameState.players[1].wallet += gGameState.pot;
           gGameState.pot = 0; 
         } else {
           gameDirectionText = '!!! need to fix a bug in our code to figure out who won...';
         }
       } else if (player0Result.handRank > computerResult.handRank) {
         gameDirectionText = 'you won with ' + document.getElementById('player0Result').innerText;
-        gGameState.wallet += gGameState.pot;
+        gGameState.players[0].wallet += gGameState.pot;
         gGameState.pot = 0; 
       } else if (player0Result.handRank < computerResult.handRank) {
         gameDirectionText = 'you lost against ' + document.getElementById('computerResult').innerText;
+        gGameState.players[1].wallet += gGameState.pot;
         gGameState.pot = 0; 
       } else {
           gameDirectionText = '!! need to fix a bug in our code to figure out who won...';
       }
     } else if (player0Result.handType > computerResult.handType) {
       gameDirectionText = 'you won with ' + document.getElementById('player0Result').innerText;
-      gGameState.wallet += gGameState.pot;
+      gGameState.players[0].wallet += gGameState.pot;
       gGameState.pot = 0; 
     } else if (player0Result.handType < computerResult.handType) {
       gameDirectionText = 'you lost against ' + document.getElementById('computerResult').innerText;
+      gGameState.players[1].wallet += gGameState.pot;
       gGameState.pot = 0; 
     } else {
         gameDirectionText = '! need to fix a bug in our code to figure out who won...';
@@ -307,16 +312,15 @@ function callGame(buttonObj){
         var jsonObj = JSON.parse(xhr.responseText);
         //console.log(xhr.responseText);
         console.log(' response from server:',jsonObj);
-        gGameState.wallet = jsonObj.wallet;
+        gGameState.players[0].wallet = jsonObj.wallet;
         gameDirections.innerHTML = gameDirectionText + jsonObj.andSomeOtherData;
       } else {
-        gameDirections.innerHTML = '...';
+        gameDirections.innerHTML = 'waiting on server...';
       }
     };
-    var someData = { wallet: gGameState.wallet };
+    var someData = { wallet: gGameState.players[0].wallet };
     var jsonString = JSON.stringify(someData);
     xhr.send(jsonString);
-
 
     gGameState.state = -1;
   }

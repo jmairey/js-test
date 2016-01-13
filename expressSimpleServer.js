@@ -205,13 +205,10 @@ function getMsg(args, user, response) {
 
 function joinGame(args, user, response) {
 
-  if (user.playing === -1) {
-    user.playing = 0;
-  } else if (user.playing === 0) {
-    user.playing = -1;
-  }
-  else {
-    user.playing = -1;
+  if (user.playing === -1) { // joinGame actually 'toggles' playing. -1: not playing, 0: playing.. more to come..
+    user.playing = 0; // playing..
+  } else {
+    user.playing = -1; // not playing..
   }
 
   if (0) { // XXX can't think of any error conditions, but I'm sure there will be some.

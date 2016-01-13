@@ -8,13 +8,12 @@
 var gGameState = {
   state: -1,
   pot: 0,
-  wallet: 100,
 
   cardsLeftInDeck:52,
 
   // indexes into the (read-only) gDeckData array. 
-  // this is really the model of the card deck. "cards" move from here
-  // into player[i].hand, then into gGameState.discards, then back here.
+  // this is really the model of the card deck. as the game progresses, "cards" move from here
+  // into each player[i].hand, then into gGameState.discards, then back here.
   deck: [
    0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12,
   13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25,

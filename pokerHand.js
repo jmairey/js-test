@@ -300,7 +300,7 @@ function callGame(buttonObj){
     }
 
     var xhr = new XMLHttpRequest();
-    xhr.open("POST", "/poker/call");
+    xhr.open("POST", "/poker/singlePlayerCall");
     xhr.setRequestHeader('Content-Type', 'application/json'); // seems needed
     xhr.onreadystatechange = function() {
       if (xhr.readyState===4 && xhr.status===200){

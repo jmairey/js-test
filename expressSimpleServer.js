@@ -90,7 +90,6 @@ var gGameState = {
 // read in our game and config files or connect to our database if we had one
 
 fs.readFile(__dirname + '/users.json', 'utf8', function(err, data) {
-
     gGameState.players = JSON.parse(data).players;
 });
 
@@ -110,52 +109,13 @@ app.use('/cards',express.static('../cardImages/small/75')); // in client code (i
 app.use('/bigtrip',express.static('../web/lindbloom-airey/BigTrip')); // serve bigTrip web page
 app.use('/john',express.static('../web/lindbloom-airey/familyfriends/john')); // serve bigTrip web page
 
+// XXX need to understand this line better! no idea what the secret: field does...
 app.use(require('express-session')({ secret: 'change me!', resave: false, saveUninitialized: false }));
 
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.get('/gameloop',function(req, res) {
-  console.log("got a GET request for /gameloop");
-  res.sendFile(__dirname + '/' + 'gameLoop2.html'); // works
-});
-
-app.get('/poker',function(req, res) {
-  console.log("got a GET request for /poker");
-  //console.log("__dirname = ",__dirname);
-  //  also return user cookie to browser for the session. 
-  //  yes, in ths example we use the same html for logging in and when they're logged in
-  if (req.user !== undefined){
-    //res.cookie('user', req.user.id);
-    res.cookie('user', req.user.username);
-    console.log('/poker: user=', req.user);
-    console.log('/poker: cookies=', req.cookies);
-    console.log('/poker sending MultiPlayer version');
-    res.sendFile(__dirname + '/PokerMultiPlayer.html');
-  }
-  else {
-    res.cookie('user', 'none');
-    console.log('/poker: user=', req.user);
-    console.log('/poker: cookies=', req.cookies);
-    console.log('/poker sending SinglePlayer version');
-    res.sendFile(__dirname + '/PokerHand.html');
-  }
-
-});
-
-app.post('/poker/call', jsonParser, function(req, res) {
-  console.log("got a POST request for /poker/call");
-  console.log('incoming from client:',req.body);
-  var jsonResponse = {
-    wallet: req.body.wallet - 1,
-    andSomeOtherData: ' and thanks for playing, btw we charged you $1...'
-  };
-  var jsonString = JSON.stringify(jsonResponse);
-  console.log('server response:',jsonString);
-  res.end(jsonString);
-});
-
-/* if we want to look at what the form sends us we can run this code 
+/* if we want to look at what the login form sends us we can run this code 
 app.post('/test_login', urlencodedParser, function (req, res) { 
   console.log("got a POST request for /login");
   console.log('incoming from client:',req.body);
@@ -183,6 +143,30 @@ app.get('/logout', function(req, res){
   //res.cookie("user","none");
   res.redirect('/poker');
 });
+
+app.get('/poker',function(req, res) {
+  console.log("got a GET request for /poker");
+  //console.log("__dirname = ",__dirname);
+  //  also return user cookie to browser for the session. 
+  //  yes, in ths example we use the same html for logging in and when they're logged in
+  if (req.user !== undefined){
+    //res.cookie('user', req.user.id);
+    res.cookie('user', req.user.username);
+    console.log('/poker: user=', req.user);
+    console.log('/poker: cookies=', req.cookies);
+    console.log('/poker sending MultiPlayer version');
+    res.sendFile(__dirname + '/PokerMultiPlayer.html');
+  }
+  else {
+    res.cookie('user', 'none');
+    console.log('/poker: user=', req.user);
+    console.log('/poker: cookies=', req.cookies);
+    console.log('/poker sending SinglePlayer version');
+    res.sendFile(__dirname + '/PokerHand.html');
+  }
+
+});
+
 
 function setMsg(args, user, response) {
   // save args.msg to the file "msg.txt". we DO NEED TO BE AUTHENTICATED to set the message.
@@ -230,7 +214,7 @@ function joinGame(args, user, response) {
     user.playing = -1;
   }
 
-  if (0) {
+  if (0) { // XXX can't think of any error conditions, but I'm sure there will be some.
     response.write(JSON.stringify({'err':'error'}));
     response.end();
   } else {
@@ -277,6 +261,18 @@ app.all('/json/:cmd', function(request, response){
   }
 });
 
+app.post('/poker/singlePlayerCall', jsonParser, function(req, res) {
+  console.log("got a POST request for /poker/singlePlayerCall");
+  console.log('incoming from client:',req.body);
+  var jsonResponse = {
+    wallet: req.body.wallet - 1,
+    andSomeOtherData: ' and thanks for playing, btw we charged you $1...'
+  };
+  var jsonString = JSON.stringify(jsonResponse);
+  console.log('server response:',jsonString);
+  res.end(jsonString);
+});
+
 // just for debugging, to see the current gamestate
 // and to know that we can get the current gamestate, :-)
 app.get('/gamestate', function(req, res) {
@@ -284,6 +280,13 @@ app.get('/gamestate', function(req, res) {
   var jsonString = JSON.stringify(gGameState);
   res.end(jsonString);
 });
+
+// server our little realtime gameloop html and javascript
+app.get('/gameloop',function(req, res) {
+  console.log("got a GET request for /gameloop");
+  res.sendFile(__dirname + '/' + 'gameLoop2.html'); // works
+});
+
 
 // This responds with the browser session cookies when asked for /cookies
 app.get('/cookies', function(req, res) {

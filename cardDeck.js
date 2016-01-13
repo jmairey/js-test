@@ -433,6 +433,7 @@ function analyzeHand(hand){
 
 }
 
+// we do this for node on the server side.
 if (exports !== undefined) {
   exports.gGameState = gGameState;
 }

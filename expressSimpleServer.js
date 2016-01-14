@@ -310,8 +310,6 @@ var server = app.listen(8081, function() {
   var lastGameCount = 0;
   var interval = setInterval(function () {
 
-    console.log('Game: count=',gameCount,'state=',gGameState.state,'numPlayers=',numPlayersPlayingLastHand);
-
     var numPlayersPlayingNextHand = 0;
     for (i = 0; i < gGameState.players.length; i++) {
       //console.log('gGameState.players[',i,']=',gGameState.players[i]);
@@ -320,14 +318,18 @@ var server = app.listen(8081, function() {
       }
     }
 
-    if (gGameState.state === -1 && numPlayersPlayingNextHand > 0) {
+    if (gGameState.state === -1 && numPlayersPlayingNextHand > 1) {
+      console.log('time for a new hand to be dealt');
+      console.log('state=',gGameState.state,'numPlayersPlayingNextHand=',numPlayersPlayingNextHand);
 
-      // discard previous hands..
+      // discard previously dealt hands..
       cardDeck.discardHand(gGameState.players[0].hand);    // XXX for now just the first two
       cardDeck.discardHand(gGameState.players[1].hand);
 
       // return discards to deck..
       cardDeck.returnDiscards();
+
+      numPlayersPlayingLastHand = numPlayersPlayingNextHand; // XXX hmmm, could be same number, but different players..
 
       // deal hands to players that are playing.  (XXX for now just the first two..)
       cardDeck.dealHands(5,2,
@@ -337,17 +339,25 @@ var server = app.listen(8081, function() {
 
       lastGameCount = gameCount;
 
-      gGameState.state = 2; // cards dealt...
+      gGameState.state = 2; // cards dealt... (discards could take us back to state 0 or 1?)
 
+
+    } else if (gGameState.state === 2) {
       console.log('cards dealt');
-    }
-    else if (gGameState.state === 2 && numPlayersPlayingNextHand === 0)
-      gGameState.state = -1;
-    else {
-      //console.log('numPlayersPlayingNextHand=',numPlayersPlayingNextHand);
+      console.log('state=',gGameState.state,'numPlayersPlayingNextHand=',numPlayersPlayingNextHand);
+      if (gameCount > lastGameCount + 3) {
+        gGameState.state = 3;
+      }
+    } else if (gGameState.state === 3) {
+      console.log('hand over, winners should be determined');
+      console.log('state=',gGameState.state,'numPlayersPlayingNextHand=',numPlayersPlayingNextHand);
+      if (gameCount > lastGameCount + 6) {
+        gGameState.state = -1;                 // start another hand
+      }
+    } else {
+      console.log('Game: count=',gameCount,'state=',gGameState.state,'numPlayers waiting=',numPlayersPlayingNextHand);
     }
 
-    numPlayersPlayingLastHand = numPlayersPlayingNextHand;
     gameCount++;
     //console.log('...');
   },1000*3);

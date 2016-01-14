@@ -15,10 +15,11 @@ function getGamestate() {
       //messageText.value = 'could not join game...';
     } else {
 
+      var nextState = responseObject.result;
 
-      if (responseObject.result.state !== gGameState.state ) {
+      if (nextState.state !== gGameState.state ) {
 
-        gGameState = responseObject.result;
+        gGameState = nextState;
 
         if (gGameState.state === 2) {
 
@@ -64,7 +65,7 @@ function getGamestate() {
             img.src = gDeckData[gGameState.players[1].hand[4]][3];
           }
 
-          //location.reload(); // XXX should not need this
+          //location.reload(); // XXX should not need this?
         } else if (gGameState.state === -1) {
 
           img = document.getElementById('card0');
@@ -89,11 +90,12 @@ function getGamestate() {
           img = document.getElementById('player1card4');
           img.src = '/cards/back-blue-75-3.png';
 
-          //location.reload(); // XXX should not need this
+          //location.reload(); // XXX should not need this?
         }
-
-
       } 
+      else {
+        // gGameState.state is unchanged..
+      }
     }
   };
   xhr.send();
@@ -112,14 +114,14 @@ function joinGame(buttonObj) {
       messageText.value = 'could not join game...';
     } else {
 
-      gGameState = responseObject.result;
+      //gGameState = responseObject.result;
 
       if (buttonObj.value === 'Join Next Hand') {
         messageText.value = 'joined game!';
         buttonObj.value = 'leave game'
 
         // Should set up long polling or regular setInterval style polling to get the gamestate from the server
-        gGamestateTimer = setInterval(getGamestate,1000*2); // every 2 seconds
+        gGamestateTimer = setInterval(getGamestate,1000*0.5); // every 1/2 seconds
 
       } else {
         messageText.value = 'left game!';
@@ -128,9 +130,9 @@ function joinGame(buttonObj) {
         clearInterval(gGamestateTimer); // cancel getting gamestate regularly
         gGameStateTimer = undefined;
 
-        setTimeout(getGamestate,1000*2); // but get state a few more times..
-        setTimeout(getGamestate,1000*3);
-        setTimeout(getGamestate,1000*4);
+        setTimeout(getGamestate,1000*4); // but get state a few more times so we reset cards when everybody quits
+        setTimeout(getGamestate,1000*16);
+        setTimeout(getGamestate,1000*64);
       }
 
     }

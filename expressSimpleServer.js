@@ -323,24 +323,16 @@ var server = app.listen(8081, function() {
     if (gGameState.state === -1 && numPlayersPlayingNextHand > 0) {
 
       // discard previous hands..
-      cardDeck.discardHand(gGameState.players[0].hand);
+      cardDeck.discardHand(gGameState.players[0].hand);    // XXX for now just the first two
       cardDeck.discardHand(gGameState.players[1].hand);
-      cardDeck.discardHand(gGameState.players[2].hand);
-      cardDeck.discardHand(gGameState.players[3].hand);
-      cardDeck.discardHand(gGameState.players[4].hand);
-      cardDeck.discardHand(gGameState.players[5].hand);
 
       // return discards to deck..
       cardDeck.returnDiscards();
 
-      // deal hands to players that are playing.
-      cardDeck.dealHands(5,6,
+      // deal hands to players that are playing.  (XXX for now just the first two..)
+      cardDeck.dealHands(5,2,
         gGameState.players[0].hand,
-        gGameState.players[1].hand,
-        gGameState.players[2].hand,
-        gGameState.players[3].hand,
-        gGameState.players[4].hand,
-        gGameState.players[5].hand
+        gGameState.players[1].hand
       );
 
       lastGameCount = gameCount;
@@ -349,6 +341,8 @@ var server = app.listen(8081, function() {
 
       console.log('cards dealt');
     }
+    else if (gGameState.state === 2 && numPlayersPlayingNextHand === 0)
+      gGameState.state = -1;
     else {
       //console.log('numPlayersPlayingNextHand=',numPlayersPlayingNextHand);
     }
@@ -356,7 +350,7 @@ var server = app.listen(8081, function() {
     numPlayersPlayingLastHand = numPlayersPlayingNextHand;
     gameCount++;
     //console.log('...');
-  },1000*7);
+  },1000*3);
 
 });
 

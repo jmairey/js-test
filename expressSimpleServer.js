@@ -232,7 +232,7 @@ function getGamestate(args, user, response) {
     response.end();
   }
 
-  console.log('getGamestate: user = ',user);
+  //console.log('getGamestate: user = ',user);
 }
 
 app.all('/json/:cmd', function(request, response){
@@ -271,23 +271,22 @@ app.post('/poker/singlePlayerCall', jsonParser, function(req, res) {
 });
 
 // just for debugging, to see the current gamestate
-// and to know that we can get the current gamestate, :-)
+// and to know that we can get the current gamestate to, for example, cheat, :-)
 app.get('/gamestate', function(req, res) {
   console.log("\ngot a GET request for /gamestate");
   var jsonString = JSON.stringify(gGameState);
   res.end(jsonString);
 });
 
-// server our little realtime gameloop html and javascript
+// serve our little realtime gameloop html and javascript combo
 app.get('/gameloop',function(req, res) {
   console.log("got a GET request for /gameloop");
-  res.sendFile(__dirname + '/' + 'gameLoop2.html'); // works
+  res.sendFile(__dirname + '/gameLoop2.html');
 });
 
-
-// This responds with the browser session cookies when asked for /cookies
+// This responds with the browser session cookies when asked for /cookies. mainly for debugging, etc.
 app.get('/cookies', function(req, res) {
-  console.log("Got a GET request for the homepage");
+  console.log("Got a GET request for /cookies");
   console.log("Cookies: ", req.cookies);
   //res.send('Hello GET');
   res.end(JSON.stringify(req.cookies));
@@ -305,6 +304,59 @@ var server = app.listen(8081, function() {
   var port = server.address().port;
 
   console.log("Example app listening at http://%s:%s", host, port);
+
+  var gameCount = 0;        // available to anonymous run game function via closure...
+  var numPlayersPlayingLastHand = 0;   // available to anonymous run game function via closure...
+  var lastGameCount = 0;
+  var interval = setInterval(function () {
+
+    console.log('Game: count=',gameCount,'state=',gGameState.state,'numPlayers=',numPlayersPlayingLastHand);
+
+    var numPlayersPlayingNextHand = 0;
+    for (i = 0; i < gGameState.players.length; i++) {
+      //console.log('gGameState.players[',i,']=',gGameState.players[i]);
+      if (gGameState.players[i].playing != -1) {
+        numPlayersPlayingNextHand += 1;
+      }
+    }
+
+    if (gGameState.state === -1 && numPlayersPlayingNextHand > 0) {
+
+      // discard previous hands..
+      cardDeck.discardHand(gGameState.players[0].hand);
+      cardDeck.discardHand(gGameState.players[1].hand);
+      cardDeck.discardHand(gGameState.players[2].hand);
+      cardDeck.discardHand(gGameState.players[3].hand);
+      cardDeck.discardHand(gGameState.players[4].hand);
+      cardDeck.discardHand(gGameState.players[5].hand);
+
+      // return discards to deck..
+      cardDeck.returnDiscards();
+
+      // deal hands to players that are playing.
+      cardDeck.dealHands(5,6,
+        gGameState.players[0].hand,
+        gGameState.players[1].hand,
+        gGameState.players[2].hand,
+        gGameState.players[3].hand,
+        gGameState.players[4].hand,
+        gGameState.players[5].hand
+      );
+
+      lastGameCount = gameCount;
+
+      gGameState.state = 2; // cards dealt...
+
+      console.log('cards dealt');
+    }
+    else {
+      //console.log('numPlayersPlayingNextHand=',numPlayersPlayingNextHand);
+    }
+
+    numPlayersPlayingLastHand = numPlayersPlayingNextHand;
+    gameCount++;
+    //console.log('...');
+  },1000*7);
 
 });
 

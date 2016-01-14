@@ -432,7 +432,10 @@ function analyzeHand(hand){
 
 }
 
-// we do this for node on the server side.
-if (exports !== undefined) {
+// we do this for node on the server side. on the browser side we can 'var exports = undefined' to ignore this code..
+if (exports !== undefined) {  // exports will be defined in node, for the server..
   exports.gGameState = gGameState;
+  exports.discardHand = discardHand;
+  exports.returnDiscards = returnDiscards;
+  exports.dealHands = dealHands;
 }

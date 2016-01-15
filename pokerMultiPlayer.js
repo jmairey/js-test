@@ -60,7 +60,6 @@ function getGamestate() {
             document.getElementById('card2').src = gDeckData[nextState.players[p0].hand[2]][3];
             document.getElementById('card3').src = gDeckData[nextState.players[p0].hand[3]][3];
             document.getElementById('card4').src = gDeckData[nextState.players[p0].hand[4]][3];
-
           }
 
           if (nextState.players[p1].hand.length === 5 && nextState.players[p1].playing > 0) {
@@ -147,22 +146,85 @@ function getGamestate() {
           gameDirections.innerHTML = 'time for another hand!';
           //location.reload(); // XXX should not need this?
         } else if (nextState.state === 3) {
-          gameDirections.innerHTML = 'who won?';
+          var player0;
+          var player1;
+          var player2;
+          var player3;
+          var player4;
+          var player5;
+
+          for (i = 0; i < nextState.players.length; i++) {
+            //console.log('gGameState.players[',i,']=',gGameState.players[i]);
+            if (nextState.players[i].playing >  0) {
+              if (!player0) {
+                player0 = nextState.players[i];
+              } else if (!player1) {
+                player1 = nextState.players[i];
+              } else if (!player2) {
+                player2 = nextState.players[i];
+              } else if (!player3) {
+                player3 = nextState.players[i];
+              } else if (!player4) {
+                player4 = nextState.players[i];
+              } else if (!player5) {
+                player5 = nextState.players[i];
+              }
+            }
+          }
+
+          //gameDirections.innerHTML = 'the server knows who won...';
+
+          if (player0 && player1) {
+
+            var p0Result = player0.result;
+            var p1Result = player1.result;
+
+            if (p0Result.handType === p1Result.handType) {
+              if (p0Result.handRank === p1Result.handRank) {
+                if (p0Result.handRank2 === p1Result.handRank2) {
+                  gameDirections.innerHTML = player0.username+' splits the pot with '+player1.username+': '+resultText(p0Result);
+                }
+                else if (p0Result.handRank2 > p1Result.handRank2) {
+                  gameDirections.innerHTML = player0.username+' takes the pot with '+resultText(p0Result);
+                }
+                else if (p0Result.handRank2 < p1Result.handRank2) {
+                  gameDirections.innerHTML = player1.username+' takes the pot with '+resultText(p1Result);
+                }
+              } else if (p0Result.handRank > p1Result.handRank) {
+                gameDirections.innerHTML = player0.username+' takes the pot with '+resultText(p0Result);
+              } else if (p0Result.handRank < p1Result.handRank) {
+                gameDirections.innerHTML = player1.username+' takes the pot with '+resultText(p1Result);
+              }
+            } else if (p0Result.handType > p1Result.handType) {
+              gameDirections.innerHTML = player0.username+' takes the pot with '+resultText(p0Result);
+            } else if (p0Result.handType < p1Result.handType) {
+              gameDirections.innerHTML = player1.username+' takes the pot with '+resultText(p1Result);
+            }
+          } else if (player0) {
+            gameDirections.innerHTML = player0.username+' is only player left playing so they take the pot!';
+          } else {
+            gameDirections.innerHTML = 'all players left before hand is over, house takes the pot?';
+          }
+
           //location.reload(); // XXX should not need this?
         }
         gGameState = nextState;
       } 
       else {
         // gGameState.state is unchanged.. although.. other fields in the state structure might be changed..
+
         document.getElementById('player0msg').innerHTML = ' hi '+gUsername;
 
-        if (nextState.players[p1].playing < 0)  {
-          document.getElementById('player1msg').innerHTML = nextState.players[p1].username + ' is logged out';
-        } else if (nextState.players[p1].playing < 1) {
-          document.getElementById('player1msg').innerHTML = nextState.players[p1].username + ' is NOT playing';
-        } else if (nextState.players[p1].playing < 2) {
-          document.getElementById('player1msg').innerHTML = nextState.players[p1].username + ' is playing!';
-        }
+        //if (nextState.players[p1].playing !== gGameState.players[p1].playing) { 
+          if (nextState.players[p1].playing < 0)  {
+            document.getElementById('player1msg').innerHTML = nextState.players[p1].username + ' is logged out';
+          } else if (nextState.players[p1].playing < 1) {
+            document.getElementById('player1msg').innerHTML = nextState.players[p1].username + ' is NOT playing';
+          } else if (nextState.players[p1].playing < 2) {
+            document.getElementById('player1msg').innerHTML = nextState.players[p1].username + ' is playing!';
+          }
+          //gGameState.players[p1].playing = nextState.players[p1].playing;
+        //}
 
         if (nextState.players[p2].playing < 0)  {
           document.getElementById('player2msg').innerHTML = nextState.players[p2].username + ' is logged out';

@@ -124,15 +124,15 @@ function setResultHTML(result,resultElement) {
   var resultText;
 
   if (result.handType === 8) {
-    resultText = 'straightflush';
+    resultText = 'a straightflush';
   } else if (result.handType === 7) {
     resultText = 'four of a kind';
   } else if (result.handType === 6) {
-    resultText = 'full house';
+    resultText = 'a full house';
   } else if (result.handType === 5) {
-    resultText = 'flush';
+    resultText = 'a flush';
   } else if (result.handType === 4) {
-    resultText = 'straight';
+    resultText = 'a straight';
   } else if (result.handType === 3) {
     resultText = 'three of a kind: ' + gDeckData[result.card0][2] +
                                 ', ' + gDeckData[result.card1][2] +
@@ -146,7 +146,7 @@ function setResultHTML(result,resultElement) {
     resultText = 'one pair: ' + gDeckData[result.card0][2] + 
                          ', ' + gDeckData[result.card1][2];
   } else {
-    resultText = 'single high card: ' + gDeckData[result.card0][2];
+    resultText = 'a single high card: ' + gDeckData[result.card0][2];
   }
 
   resultElement.innerHTML = resultText;

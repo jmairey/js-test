@@ -205,6 +205,41 @@ function dealHands(numCards,numHands,hand0, hand1, hand2, hand3, hand4, hand5) {
   //console.log("gGameState.deck = ",gGameState.deck);
 }
 
+function resultText(result) {
+  var resultText;
+
+  if (result.handType === 8) {
+    resultText = 'a straightflush';
+  } else if (result.handType === 7) {
+    resultText = 'four of a kind';
+  } else if (result.handType === 6) {
+    resultText = 'a full house';
+  } else if (result.handType === 5) {
+    resultText = 'a flush';
+  } else if (result.handType === 4) {
+    resultText = 'straight';
+  } else if (result.handType === 3) {
+    resultText = 'three of a kind: ' + gDeckData[result.card0][2] +
+                                ', ' + gDeckData[result.card1][2] +
+                                ', ' + gDeckData[result.card2][2];
+  } else if (result.handType === 2) {
+    resultText = 'two pair : ' + gDeckData[result.card0][2] +
+                          ', ' + gDeckData[result.card1][2] +
+                          ', ' + gDeckData[result.card2][2] +
+                          ', ' + gDeckData[result.card3][2];
+  } else if (result.handType === 1) {
+    resultText = 'one pair: ' + gDeckData[result.card0][2] + 
+                         ', ' + gDeckData[result.card1][2];
+  } else if (result.handType === 0) {
+    resultText = 'a single high card: ' + gDeckData[result.card0][2];
+  } else {
+    resultText = 'results are not in yet..';
+  }
+
+  return resultText;
+}
+
+// XXX should probably pass in the result object. I think we are creating one here
 function analyzeHand(hand){
 
   // could assume the hand is sorted..
@@ -220,7 +255,6 @@ function analyzeHand(hand){
     card3: -1,
     card4: -1,
   };
-
 
   // using javascript property of variables being undefined by default which is 'falsy'
   var pair1; // starts out undefined...
@@ -438,4 +472,6 @@ if (exports !== undefined) {  // exports will be defined in node, for the server
   exports.discardHand = discardHand;
   exports.returnDiscards = returnDiscards;
   exports.dealHands = dealHands;
+  exports.analyzeHand = analyzeHand;
+  exports.resultText = resultText;
 }

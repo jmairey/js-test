@@ -330,6 +330,7 @@ var server = app.listen(8081, function() {
       console.log('time for a new hand to be dealt');
       console.log('state=',gGameState.state,'numPlayersPlayingNextHand=',numPlayersPlayingNextHand);
 
+
       // discard previously dealt hands..
       cardDeck.discardHand(p0.hand);    // XXX for now just the first two
       cardDeck.discardHand(p1.hand);
@@ -348,16 +349,84 @@ var server = app.listen(8081, function() {
 
 
     } else if (gGameState.state === 2) {
-      console.log('cards dealt');
-      console.log('state=',gGameState.state,'numPlayersPlayingNextHand=',numPlayersPlayingNextHand);
-      if (gameCount > lastGameCount + 3) {
+      if (gameCount > lastGameCount + 4) {
+        console.log('cards dealt');
+        console.log('state=',gGameState.state,'numPlayersPlayingNextHand=',numPlayersPlayingNextHand);
+        console.log('---results---');
+
+        var p0Result;
+        var p1Result;
+
+        if (p0) {
+          p0Result = cardDeck.analyzeHand(p0.hand); // XXX should we be passing result? think so
+          p0.result = p0Result; // XXX what exactly happened with this object copy?
+        }
+
+        if (p1) {
+          p1Result = cardDeck.analyzeHand(p1.hand); // XXX same as above
+          p1.result = p1Result;
+        }
+
+        if (p0Result && p1Result) {
+          if (p0Result.handType === p1Result.handType) {
+            if (p0Result.handRank === p1Result.handRank) {
+              if (p0Result.handRank2 === p1Result.handRank2) {
+                console.log('   ',p0.username,'splits the pot with',p1.username,': ',cardDeck.resultText(p0Result));
+              }
+              else if (p0Result.handRank2 > p1Result.handRank2) {
+                console.log('   ',p0.username,'takes the pot with',cardDeck.resultText(p0Result));
+              }
+              else if (p0Result.handRank2 < p1Result.handRank2) {
+                console.log('   ',p1.username,'takes the pot with',cardDeck.resultText(p1Result));
+              }
+            } else if (p0Result.handRank > p1Result.handRank) {
+              console.log('   ',p0.username,'takes the pot with',cardDeck.resultText(p0Result));
+            } else if (p0Result.handRank < p1Result.handRank) {
+              console.log('   ',p1.username,'takes the pot with',cardDeck.resultText(p1Result));
+            }
+          } else if (p0Result.handType > p1Result.handType) {
+            console.log('   ',p0.username,'takes the pot with',cardDeck.resultText(p0Result));
+          } else if (p0Result.handType < p1Result.handType) {
+            console.log('   ',p1.username,'takes the pot with',cardDeck.resultText(p1Result));
+          }
+        }
+        else if (p0Result) {
+          console.log('    only one player left playing so',p0.username,'takes the pot');
+        }
+        else if (p1Result) {
+          console.log('    only one player left playing so',p1.username,'takes the pot');
+        }
+        else {
+          console.log('    no results? nobody playing? should check what is in the pot');
+        }
+        console.log('^^^results computed^^^');
+
         gGameState.state = 3;
       }
     } else if (gGameState.state === 3) {
-      console.log('hand over, winners should be determined');
+      console.log('hand over, winners should be known');
       console.log('state=',gGameState.state,'numPlayersPlayingNextHand=',numPlayersPlayingNextHand);
-      if (gameCount > lastGameCount + 6) {
+
+      if (gameCount > lastGameCount + 12) { // give clients time to get results..
         gGameState.state = 0;                 // start another hand
+
+        // initialize player results..
+        // XXX maybe we want to do a copy field by field, not have players all pointing to same
+        // result? (or always generating a new result object like analyzeHand does?) (needs JS fact checking!)
+        for (i = 0; i < gGameState.players.length; i++) {
+
+          if (1) {
+            gGameState.players[i].result.handType = -1;
+            gGameState.players[i].result.handRank = -1;
+            gGameState.players[i].result.handRank2 = -1;
+            gGameState.players[i].result.card0 = -1;
+            gGameState.players[i].result.card1 = -1;
+            gGameState.players[i].result.card2 = -1;
+            gGameState.players[i].result.card3 = -1;
+            gGameState.players[i].result.card4 = -1;
+          }
+        }
+
       }
     } else {
       console.log('Game: count=',gameCount,'state=',gGameState.state,'numPlayers waiting=',numPlayersPlayingNextHand);
@@ -365,7 +434,7 @@ var server = app.listen(8081, function() {
 
     gameCount++;
     //console.log('...');
-  },1000*2);
+  },1000*2);  // run game step every 2 seconds.. 
 
 });
 

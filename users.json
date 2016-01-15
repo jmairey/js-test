@@ -6,6 +6,16 @@
       "id": 1,
       "wallet": 100,
       "playing": -1,
+      "result": {
+        "handType": -1,
+        "handRank": -1,
+        "handRank2": -1,
+        "card0": -1,
+        "card1": -1,
+        "card2": -1,
+        "card3": -1,
+        "card4": -1
+      },
       "hand" : []
     },
     {
@@ -14,6 +24,16 @@
       "id": 2,
       "wallet": 100,
       "playing": -1,
+      "result": {
+        "handType": -1,
+        "handRank": -1,
+        "handRank2": -1,
+        "card0": -1,
+        "card1": -1,
+        "card2": -1,
+        "card3": -1,
+        "card4": -1
+      },
       "hand" : []
     },
     {
@@ -22,6 +42,16 @@
       "id": 3,
       "wallet": 100,
       "playing": -1,
+      "result": {
+        "handType": -1,
+        "handRank": -1,
+        "handRank2": -1,
+        "card0": -1,
+        "card1": -1,
+        "card2": -1,
+        "card3": -1,
+        "card4": -1
+      },
       "hand" : []
     },
     {
@@ -30,6 +60,16 @@
       "id": 4,
       "wallet": 100,
       "playing": -1,
+      "result": {
+        "handType": -1,
+        "handRank": -1,
+        "handRank2": -1,
+        "card0": -1,
+        "card1": -1,
+        "card2": -1,
+        "card3": -1,
+        "card4": -1
+      },
       "hand" : []
     },
     {
@@ -38,6 +78,16 @@
       "id": 5,
       "wallet": 100,
       "playing": -1,
+      "result": {
+        "handType": -1,
+        "handRank": -1,
+        "handRank2": -1,
+        "card0": -1,
+        "card1": -1,
+        "card2": -1,
+        "card3": -1,
+        "card4": -1
+      },
       "hand" : []
     },
     {
@@ -46,6 +96,16 @@
       "id": 6,
       "wallet": 100,
       "playing": -1,
+      "result": {
+        "handType": -1,
+        "handRank": -1,
+        "handRank2": -1,
+        "card0": -1,
+        "card1": -1,
+        "card2": -1,
+        "card3": -1,
+        "card4": -1
+      },
       "hand" : []
     }
   ]

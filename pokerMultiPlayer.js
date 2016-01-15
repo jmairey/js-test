@@ -2,7 +2,10 @@
 
 var gGamestateTimer;
 
+var gId;
+
 function getGamestate() {
+  var gameDirections = document.getElementById('gameDirections');
   var cmd = 'getGamestate';
   var xhr = new XMLHttpRequest();
   var url = '/json/' + cmd;
@@ -10,91 +13,188 @@ function getGamestate() {
   xhr.onload = function(xmlEvent) {
     var img; 
     var responseObject = JSON.parse(xhr.response);
+    var i;
+    var j;
     if ('err' in responseObject) {
       console.log('getGamestate: err = ', responseObject.err);
       //messageText.value = 'could not join game...';
     } else {
-
       var nextState = responseObject.result;
+      var p0 = 0;
+      var p1 = 1;
+      var p2 = 2;
+      var p3 = 3;
+      var p4 = 4;
+      var p5 = 5;
+
+      for (i = 0; i < nextState.players.length; i++) {
+        if (nextState.players[i].username === gUsername) {
+          gId = nextState.players[i].id-1;
+        }
+      }
+
+      if        (gId === 1) {
+        p0 = gId; 
+        p1 = 0;
+      } else if (gId === 2) {
+        p0 = gId; 
+        p2 = 0;
+      } else if (gId === 3) {
+        p0 = gId; 
+        p3 = 0;
+      } else if (gId === 4) {
+        p0 = gId; 
+        p4 = 0;
+      } else if (gId === 5) {
+        p0 = gId; 
+        p5 = 0;
+      }
 
       if (nextState.state !== gGameState.state ) {
 
-        gGameState = nextState;
+        if (nextState.state === 2) {
 
-        if (gGameState.state === 2) {
+          if (nextState.players[p0].hand.length === 5 && nextState.players[p0].playing > 0) {
+            document.getElementById('card0').src = gDeckData[nextState.players[p0].hand[0]][3];
+            document.getElementById('card1').src = gDeckData[nextState.players[p0].hand[1]][3];
+            document.getElementById('card2').src = gDeckData[nextState.players[p0].hand[2]][3];
+            document.getElementById('card3').src = gDeckData[nextState.players[p0].hand[3]][3];
+            document.getElementById('card4').src = gDeckData[nextState.players[p0].hand[4]][3];
 
-          img = document.getElementById('card0');
-          if (gGameState.players[0].hand) {
-            img.src = gDeckData[gGameState.players[0].hand[0]][3];
-          }
-          img = document.getElementById('card1');
-          if (gGameState.players[0].hand) {
-            img.src = gDeckData[gGameState.players[0].hand[1]][3];
-          }
-          img = document.getElementById('card2');
-          if (gGameState.players[0].hand) {
-            img.src = gDeckData[gGameState.players[0].hand[2]][3];
-          }
-          img = document.getElementById('card3');
-          if (gGameState.players[0].hand) {
-            img.src = gDeckData[gGameState.players[0].hand[3]][3];
-          }
-          img = document.getElementById('card4');
-          if (gGameState.players[0].hand) {
-            img.src = gDeckData[gGameState.players[0].hand[4]][3];
           }
 
-          img = document.getElementById('player1card0');
-          if (gGameState.players[1].hand) {
-            img.src = gDeckData[gGameState.players[1].hand[0]][3];
+          if (nextState.players[p1].hand.length === 5 && nextState.players[p1].playing > 0) {
+            document.getElementById('player1card0').src = gDeckData[nextState.players[p1].hand[0]][3];
+            document.getElementById('player1card1').src = gDeckData[nextState.players[p1].hand[1]][3];
+            document.getElementById('player1card2').src = gDeckData[nextState.players[p1].hand[2]][3];
+            document.getElementById('player1card3').src = gDeckData[nextState.players[p1].hand[3]][3];
+            document.getElementById('player1card4').src = gDeckData[nextState.players[p1].hand[4]][3];
           }
-          img = document.getElementById('player1card1');
-          if (gGameState.players[1].hand) {
-            img.src = gDeckData[gGameState.players[1].hand[1]][3];
+
+          if (nextState.players[p2].hand.length === 5 && nextState.players[p2].playing > 0) {
+            document.getElementById('player2card0').src = gDeckData[nextState.players[p2].hand[0]][3];
+            document.getElementById('player2card1').src = gDeckData[nextState.players[p2].hand[1]][3];
+            document.getElementById('player2card2').src = gDeckData[nextState.players[p2].hand[2]][3];
+            document.getElementById('player2card3').src = gDeckData[nextState.players[p2].hand[3]][3];
+            document.getElementById('player2card4').src = gDeckData[nextState.players[p2].hand[4]][3];
           }
-          img = document.getElementById('player1card2');
-          if (gGameState.players[1].hand) {
-            img.src = gDeckData[gGameState.players[1].hand[2]][3];
+
+          if (nextState.players[p3].hand.length === 5 && nextState.players[p3].playing > 0) {
+            document.getElementById('player3card0').src = gDeckData[nextState.players[p3].hand[0]][3];
+            document.getElementById('player3card1').src = gDeckData[nextState.players[p3].hand[1]][3];
+            document.getElementById('player3card2').src = gDeckData[nextState.players[p3].hand[2]][3];
+            document.getElementById('player3card3').src = gDeckData[nextState.players[p3].hand[3]][3];
+            document.getElementById('player3card4').src = gDeckData[nextState.players[p3].hand[4]][3];
           }
-          img = document.getElementById('player1card3');
-          if (gGameState.players[1].hand) {
-            img.src = gDeckData[gGameState.players[1].hand[3]][3];
+
+          if (nextState.players[p4].hand.length === 5 && nextState.players[p4].playing > 0) {
+            document.getElementById('player4card0').src = gDeckData[nextState.players[p4].hand[0]][3];
+            document.getElementById('player4card1').src = gDeckData[nextState.players[p4].hand[1]][3];
+            document.getElementById('player4card2').src = gDeckData[nextState.players[p4].hand[2]][3];
+            document.getElementById('player4card3').src = gDeckData[nextState.players[p4].hand[3]][3];
+            document.getElementById('player4card4').src = gDeckData[nextState.players[p4].hand[4]][3];
           }
-          img = document.getElementById('player1card4');
-          if (gGameState.players[1].hand) {
-            img.src = gDeckData[gGameState.players[1].hand[4]][3];
+
+          if (nextState.players[p5].hand.length === 5 && nextState.players[p5].playing > 0) {
+            document.getElementById('player5card0').src = gDeckData[nextState.players[p5].hand[0]][3];
+            document.getElementById('player5card1').src = gDeckData[nextState.players[p5].hand[1]][3];
+            document.getElementById('player5card2').src = gDeckData[nextState.players[p5].hand[2]][3];
+            document.getElementById('player5card3').src = gDeckData[nextState.players[p5].hand[3]][3];
+            document.getElementById('player5card4').src = gDeckData[nextState.players[p5].hand[4]][3];
           }
+
+          gameDirections.innerHTML = 'cards are dealt';
 
           //location.reload(); // XXX should not need this?
-        } else if (gGameState.state === -1) {
+        } else if (nextState.state === 0 && gGameState.state >= 0) {
 
-          img = document.getElementById('card0');
-          img.src = '/cards/back-blue-75-3.png';
-          img = document.getElementById('card1');
-          img.src = '/cards/back-blue-75-3.png';
-          img = document.getElementById('card2');
-          img.src = '/cards/back-blue-75-3.png';
-          img = document.getElementById('card3');
-          img.src = '/cards/back-blue-75-3.png';
-          img = document.getElementById('card4');
-          img.src = '/cards/back-blue-75-3.png';
+          document.getElementById('card0').src = '/cards/back-blue-75-3.png';
+          document.getElementById('card1').src = '/cards/back-blue-75-3.png';
+          document.getElementById('card2').src = '/cards/back-blue-75-3.png';
+          document.getElementById('card3').src = '/cards/back-blue-75-3.png';
+          document.getElementById('card4').src = '/cards/back-blue-75-3.png';
 
-          img = document.getElementById('player1card0');
-          img.src = '/cards/back-blue-75-3.png';
-          img = document.getElementById('player1card1');
-          img.src = '/cards/back-blue-75-3.png';
-          img = document.getElementById('player1card2');
-          img.src = '/cards/back-blue-75-3.png';
-          img = document.getElementById('player1card3');
-          img.src = '/cards/back-blue-75-3.png';
-          img = document.getElementById('player1card4');
-          img.src = '/cards/back-blue-75-3.png';
+          document.getElementById('player1card0').src = '/cards/back-blue-75-3.png';
+          document.getElementById('player1card1').src = '/cards/back-blue-75-3.png';
+          document.getElementById('player1card2').src = '/cards/back-blue-75-3.png';
+          document.getElementById('player1card3').src = '/cards/back-blue-75-3.png';
+          document.getElementById('player1card4').src = '/cards/back-blue-75-3.png';
 
+          document.getElementById('player2card0').src = '/cards/back-blue-75-3.png';
+          document.getElementById('player2card1').src = '/cards/back-blue-75-3.png';
+          document.getElementById('player2card2').src = '/cards/back-blue-75-3.png';
+          document.getElementById('player2card3').src = '/cards/back-blue-75-3.png';
+          document.getElementById('player2card4').src = '/cards/back-blue-75-3.png';
+
+          document.getElementById('player3card0').src = '/cards/back-blue-75-3.png';
+          document.getElementById('player3card1').src = '/cards/back-blue-75-3.png';
+          document.getElementById('player3card2').src = '/cards/back-blue-75-3.png';
+          document.getElementById('player3card3').src = '/cards/back-blue-75-3.png';
+          document.getElementById('player3card4').src = '/cards/back-blue-75-3.png';
+
+          document.getElementById('player4card0').src = '/cards/back-blue-75-3.png';
+          document.getElementById('player4card1').src = '/cards/back-blue-75-3.png';
+          document.getElementById('player4card2').src = '/cards/back-blue-75-3.png';
+          document.getElementById('player4card3').src = '/cards/back-blue-75-3.png';
+          document.getElementById('player4card4').src = '/cards/back-blue-75-3.png';
+
+          document.getElementById('player5card0').src = '/cards/back-blue-75-3.png';
+          document.getElementById('player5card1').src = '/cards/back-blue-75-3.png';
+          document.getElementById('player5card2').src = '/cards/back-blue-75-3.png';
+          document.getElementById('player5card3').src = '/cards/back-blue-75-3.png';
+          document.getElementById('player5card4').src = '/cards/back-blue-75-3.png';
+
+          gameDirections.innerHTML = 'time for another hand!';
+          //location.reload(); // XXX should not need this?
+        } else if (nextState.state === 3) {
+          gameDirections.innerHTML = 'who won?';
           //location.reload(); // XXX should not need this?
         }
+        gGameState = nextState;
       } 
       else {
-        // gGameState.state is unchanged..
+        // gGameState.state is unchanged.. although.. other fields in the state structure might be changed..
+        document.getElementById('player0msg').innerHTML = ' hi '+gUsername;
+
+        if (nextState.players[p1].playing < 0)  {
+          document.getElementById('player1msg').innerHTML = nextState.players[p1].username + ' is logged out';
+        } else if (nextState.players[p1].playing < 1) {
+          document.getElementById('player1msg').innerHTML = nextState.players[p1].username + ' is NOT playing';
+        } else if (nextState.players[p1].playing < 2) {
+          document.getElementById('player1msg').innerHTML = nextState.players[p1].username + ' is playing!';
+        }
+
+        if (nextState.players[p2].playing < 0)  {
+          document.getElementById('player2msg').innerHTML = nextState.players[p2].username + ' is logged out';
+        } else if (nextState.players[p2].playing < 1) {
+          document.getElementById('player2msg').innerHTML = nextState.players[p2].username + ' is NOT playing';
+        } else if (nextState.players[p2].playing < 2) {
+          document.getElementById('player2msg').innerHTML = nextState.players[p2].username + ' is playing!';
+        }
+
+        if (nextState.players[p3].playing < 0)  {
+          document.getElementById('player3msg').innerHTML = nextState.players[p3].username + ' is logged out';
+        } else if (nextState.players[p3].playing < 1) {
+          document.getElementById('player3msg').innerHTML = nextState.players[p3].username + ' is NOT playing';
+        } else if (nextState.players[p3].playing < 2) {
+          document.getElementById('player3msg').innerHTML = nextState.players[p3].username + ' is playing!';
+        }
+
+        if (nextState.players[p4].playing < 0)  {
+          document.getElementById('player4msg').innerHTML = nextState.players[p4].username + ' is logged out';
+        } else if (nextState.players[p4].playing < 1) {
+          document.getElementById('player4msg').innerHTML = nextState.players[p4].username + ' is NOT playing';
+        } else if (nextState.players[p4].playing < 2) {
+          document.getElementById('player4msg').innerHTML = nextState.players[p4].username + ' is playing!';
+        }
+
+        if (nextState.players[p5].playing < 0)  {
+          document.getElementById('player5msg').innerHTML = nextState.players[p5].username + ' is logged out';
+        } else if (nextState.players[p5].playing < 1) {
+          document.getElementById('player5msg').innerHTML = nextState.players[p5].username + ' is NOT playing';
+        } else if (nextState.players[p5].playing < 2) {
+          document.getElementById('player5msg').innerHTML = nextState.players[p5].username + ' is playing!';
+        }
       }
     }
   };
@@ -102,7 +202,6 @@ function getGamestate() {
 }
 
 function joinGame(buttonObj) {
-  alert(buttonObj.value);
   var cmd = 'joinGame';
   var xhr = new XMLHttpRequest();
   var url = '/json/' + cmd;
@@ -113,31 +212,15 @@ function joinGame(buttonObj) {
       console.log('joinGame: err = ', responseObject.err);
       messageText.value = 'could not join game...';
     } else {
-
-      //gGameState = responseObject.result;
-
       if (buttonObj.value === 'Join Next Hand') {
-        messageText.value = 'joined game!';
         buttonObj.value = 'leave game'
-
-        // Should set up long polling or regular setInterval style polling to get the gamestate from the server
-        gGamestateTimer = setInterval(getGamestate,1000*0.5); // every 1/2 seconds
-
       } else {
-        messageText.value = 'left game!';
         buttonObj.value = 'Join Next Hand';
-
-        clearInterval(gGamestateTimer); // cancel getting gamestate regularly
-        gGameStateTimer = undefined;
-
-        setTimeout(getGamestate,1000*4); // but get state a few more times so we reset cards when everybody quits
-        setTimeout(getGamestate,1000*16);
-        setTimeout(getGamestate,1000*64);
       }
-
     }
   };
   xhr.send();
+  alert(buttonObj.value);
 }
 
 function discardCurrentCard(buttonObj) {
@@ -159,6 +242,9 @@ function callGame(buttonObj){
 
 function initMultiplayer(){
   authenticationInit();
+
+  // Should set up long polling or regular setInterval style polling to get the gamestate from the server
+  gGamestateTimer = setInterval(getGamestate,1000*0.5); // just poll the server every 1/2 seconds for the gameState
 }
 
 window.onload =initMultiplayer;

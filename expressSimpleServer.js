@@ -79,18 +79,12 @@ passport.deserializeUser(function(id, cb) {
 */
 
 var gGameState = cardDeck.gGameState;
-/*
-var gGameState = {
-    state: -1,
-    pot: 0,
-    players: [],
-};
-*/
 
 // read in our game and config files or connect to our database if we had one
 
 fs.readFile(__dirname + '/users.json', 'utf8', function(err, data) {
     gGameState.players = JSON.parse(data).players;
+    gGameState.state = 0;
 });
 
 // XXX probably should actually wait for game and config files to be read and processed before we fire up express..
@@ -115,21 +109,6 @@ app.use(require('express-session')({ secret: 'change me!', resave: false, saveUn
 app.use(passport.initialize());
 app.use(passport.session());
 
-/* if we want to look at what the login form sends us we can run this code 
-app.post('/test_login', urlencodedParser, function (req, res) { 
-  console.log("got a POST request for /login");
-  console.log('incoming from client:',req.body);
-  var jsonResponse = {
-    username: 'bob',
-    password: 'secret',
-    andSomeOtherData: ' yes, and some other data',
-  };
-  var jsonString = JSON.stringify(jsonResponse);
-  console.log('server response:',jsonString);
-  res.end(jsonString);
-});
-*/
-
 app.post('/login', 
   passport.authenticate('local', { 
     successRedirect: '/poker',
@@ -139,8 +118,10 @@ app.post('/login',
 
 app.get('/logout', function(req, res){
   console.log('Server trying to logout the user...');
+  // XXX really need to mark the user as no longer playing if they were playing. could have the client
+  // side do this work; leave game before logging out if currently playing?
+  req.user.playing = -1;
   req.logout();
-  //res.cookie("user","none");
   res.redirect('/poker');
 });
 
@@ -151,6 +132,9 @@ app.get('/poker',function(req, res) {
   //  yes, in ths example we use the same html for logging in and when they're logged in
   if (req.user !== undefined){
     //res.cookie('user', req.user.id);
+    if (req.user.playing < 0) {
+      req.user.playing = 0;
+    }
     res.cookie('user', req.user.username);
     console.log('/poker: user=', req.user);
     console.log('/poker: cookies=', req.cookies);
@@ -205,17 +189,19 @@ function getMsg(args, user, response) {
 
 function joinGame(args, user, response) {
 
-  if (user.playing === -1) { // joinGame actually 'toggles' playing. -1: not playing, 0: playing.. more to come..
-    user.playing = 0; // playing..
-  } else {
-    user.playing = -1; // not playing..
-  }
 
   if (0) { // XXX can't think of any error conditions, but I'm sure there will be some.
     response.write(JSON.stringify({'err':'error'}));
     response.end();
   } else {
-    response.write(JSON.stringify({'result':gGameState}));
+
+    if (user.playing === 0) { // joinGame actually 'toggles' playing. 0: not playing, 1: playing.. more to come..
+      user.playing = 1; // playing..
+    } else {
+      user.playing = 0; // not playing..
+    }
+
+    response.write(JSON.stringify({'result':gGameState})); // XXX not used on client side..
     response.end();
   }
 
@@ -259,7 +245,7 @@ app.all('/json/:cmd', function(request, response){
 });
 
 app.post('/poker/singlePlayerCall', jsonParser, function(req, res) {
-  console.log("got a POST request for /poker/singlePlayerCall");
+  console.log('got a POST request for /poker/singlePlayerCall');
   console.log('incoming from client:',req.body);
   var jsonResponse = {
     wallet: req.body.wallet - 1,
@@ -272,31 +258,33 @@ app.post('/poker/singlePlayerCall', jsonParser, function(req, res) {
 
 // just for debugging, to see the current gamestate
 // and to know that we can get the current gamestate to, for example, cheat, :-)
+/*
 app.get('/gamestate', function(req, res) {
   console.log("\ngot a GET request for /gamestate");
   var jsonString = JSON.stringify(gGameState);
   res.end(jsonString);
 });
+*/
 
 // serve our little realtime gameloop html and javascript combo
 app.get('/gameloop',function(req, res) {
-  console.log("got a GET request for /gameloop");
+  console.log('got a GET request for /gameloop');
   res.sendFile(__dirname + '/gameLoop2.html');
 });
 
 // This responds with the browser session cookies when asked for /cookies. mainly for debugging, etc.
 app.get('/cookies', function(req, res) {
-  console.log("Got a GET request for /cookies");
-  console.log("Cookies: ", req.cookies);
+  console.log('Got a GET request for /cookies');
+  console.log('Cookies: ', req.cookies);
   //res.send('Hello GET');
   res.end(JSON.stringify(req.cookies));
 });
 
 // This responds with... something.. to show we are alive
 app.get('/', function(req, res) {
-  console.log("Got a GET request for the homepage");
+  console.log('Got a GET request for the homepage');
   //res.send('Hello GET');
-  res.end(JSON.stringify({ proudlyServing: "quality bits since late 2015" }));
+  res.end(JSON.stringify({ proudlyServing: 'quality bits since late 2015' }));
 });
 
 var server = app.listen(8081, function() {
@@ -311,20 +299,40 @@ var server = app.listen(8081, function() {
   var interval = setInterval(function () {
 
     var numPlayersPlayingNextHand = 0;
+    var i;
+    var p0;
+    var p1; 
+    var p2;
+    var p3;
+    var p4;
+    var p5;
     for (i = 0; i < gGameState.players.length; i++) {
       //console.log('gGameState.players[',i,']=',gGameState.players[i]);
-      if (gGameState.players[i].playing != -1) {
+      if (gGameState.players[i].playing >  0) {
         numPlayersPlayingNextHand += 1;
+        if (!p0) {
+          p0 = gGameState.players[i];
+        } else if (!p1) {
+          p1 = gGameState.players[i];
+        } else if (!p2) {
+          p2 = gGameState.players[i];
+        } else if (!p3) {
+          p3 = gGameState.players[i];
+        } else if (!p4) {
+          p4 = gGameState.players[i];
+        } else if (!p5) {
+          p5 = gGameState.players[i];
+        }
       }
     }
 
-    if (gGameState.state === -1 && numPlayersPlayingNextHand > 1) {
+    if (gGameState.state === 0 && numPlayersPlayingNextHand > 1) {
       console.log('time for a new hand to be dealt');
       console.log('state=',gGameState.state,'numPlayersPlayingNextHand=',numPlayersPlayingNextHand);
 
       // discard previously dealt hands..
-      cardDeck.discardHand(gGameState.players[0].hand);    // XXX for now just the first two
-      cardDeck.discardHand(gGameState.players[1].hand);
+      cardDeck.discardHand(p0.hand);    // XXX for now just the first two
+      cardDeck.discardHand(p1.hand);
 
       // return discards to deck..
       cardDeck.returnDiscards();
@@ -332,14 +340,11 @@ var server = app.listen(8081, function() {
       numPlayersPlayingLastHand = numPlayersPlayingNextHand; // XXX hmmm, could be same number, but different players..
 
       // deal hands to players that are playing.  (XXX for now just the first two..)
-      cardDeck.dealHands(5,2,
-        gGameState.players[0].hand,
-        gGameState.players[1].hand
-      );
+      cardDeck.dealHands(5,2, p0.hand, p1.hand);
 
       lastGameCount = gameCount;
 
-      gGameState.state = 2; // cards dealt... (discards could take us back to state 0 or 1?)
+      gGameState.state = 2; // cards dealt... (discards could take us back to state 1?)
 
 
     } else if (gGameState.state === 2) {
@@ -352,7 +357,7 @@ var server = app.listen(8081, function() {
       console.log('hand over, winners should be determined');
       console.log('state=',gGameState.state,'numPlayersPlayingNextHand=',numPlayersPlayingNextHand);
       if (gameCount > lastGameCount + 6) {
-        gGameState.state = -1;                 // start another hand
+        gGameState.state = 0;                 // start another hand
       }
     } else {
       console.log('Game: count=',gameCount,'state=',gGameState.state,'numPlayers waiting=',numPlayersPlayingNextHand);
@@ -360,7 +365,7 @@ var server = app.listen(8081, function() {
 
     gameCount++;
     //console.log('...');
-  },1000*3);
+  },1000*2);
 
 });
 

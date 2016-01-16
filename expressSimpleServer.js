@@ -195,13 +195,14 @@ function joinGame(args, user, response) {
     response.end();
   } else {
 
-    if (user.playing === 0) { // joinGame actually 'toggles' playing. 0: not playing, 1: playing.. more to come..
+    if (user.playing === 0) {
       user.playing = 1; // playing..
-    } else {
-      user.playing = 0; // not playing..
+
+      user.wallet -= 5;          // ante
+      gGameState.pot += 5; 
     }
 
-    response.write(JSON.stringify({'result':gGameState})); // XXX not used on client side..
+    response.write(JSON.stringify({'result':'result'}));
     response.end();
   }
 
@@ -266,7 +267,7 @@ app.get('/gamestate', function(req, res) {
 });
 */
 
-// serve our little realtime gameloop html and javascript combo
+// serve our little realtime gameloop html and javascript combo demo
 app.get('/gameloop',function(req, res) {
   console.log('got a GET request for /gameloop');
   res.sendFile(__dirname + '/gameLoop2.html');
@@ -372,32 +373,52 @@ var server = app.listen(8081, function() {
             if (p0Result.handRank === p1Result.handRank) {
               if (p0Result.handRank2 === p1Result.handRank2) {
                 console.log('   ',p0.username,'splits the pot with',p1.username,': ',cardDeck.resultText(p0Result));
+
+                p0.wallet += gGameState.pot/2;
+                p1.wallet += gGameState.pot/2;
+                gGameState.pot = 0;
               }
               else if (p0Result.handRank2 > p1Result.handRank2) {
                 console.log('   ',p0.username,'takes the pot with',cardDeck.resultText(p0Result));
+                p0.wallet += gGameState.pot;
+                gGameState.pot = 0;
               }
               else if (p0Result.handRank2 < p1Result.handRank2) {
                 console.log('   ',p1.username,'takes the pot with',cardDeck.resultText(p1Result));
+                p1.wallet += gGameState.pot;
+                gGameState.pot = 0;
               }
             } else if (p0Result.handRank > p1Result.handRank) {
               console.log('   ',p0.username,'takes the pot with',cardDeck.resultText(p0Result));
+              p0.wallet += gGameState.pot;
+              gGameState.pot = 0;
             } else if (p0Result.handRank < p1Result.handRank) {
               console.log('   ',p1.username,'takes the pot with',cardDeck.resultText(p1Result));
+              p1.wallet += gGameState.pot;
+              gGameState.pot = 0;
             }
           } else if (p0Result.handType > p1Result.handType) {
             console.log('   ',p0.username,'takes the pot with',cardDeck.resultText(p0Result));
+            p0.wallet += gGameState.pot;
+            gGameState.pot = 0;
           } else if (p0Result.handType < p1Result.handType) {
             console.log('   ',p1.username,'takes the pot with',cardDeck.resultText(p1Result));
+            p1.wallet += gGameState.pot;
+            gGameState.pot = 0;
           }
         }
         else if (p0Result) {
           console.log('    only one player left playing so',p0.username,'takes the pot');
+          p0.wallet += gGameState.pot;
+          gGameState.pot = 0;
         }
         else if (p1Result) {
           console.log('    only one player left playing so',p1.username,'takes the pot');
+          p1.wallet += gGameState.pot;
+          gGameState.pot = 0;
         }
         else {
-          console.log('    no results? nobody playing? should check what is in the pot');
+          console.log('    no results? nobody playing? pot=',gGameState.pot);
         }
         console.log('^^^results computed^^^');
 
@@ -424,6 +445,10 @@ var server = app.listen(8081, function() {
             gGameState.players[i].result.card2 = -1;
             gGameState.players[i].result.card3 = -1;
             gGameState.players[i].result.card4 = -1;
+
+            if (gGameState.players[i].playing === 1) {
+              gGameState.players[i].playing = 0;
+            }
           }
         }
 

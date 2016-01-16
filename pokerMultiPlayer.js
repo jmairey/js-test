@@ -213,15 +213,15 @@ function getGamestate() {
       else {
         // gGameState.state is unchanged.. although.. other fields in the state structure might be changed..
 
-        document.getElementById('player0msg').innerHTML = ' hi '+gUsername;
+        document.getElementById('player0msg').innerHTML = ' hi '+gUsername+' you have $'+nextState.players[p0].wallet;
 
         //if (nextState.players[p1].playing !== gGameState.players[p1].playing) { 
           if (nextState.players[p1].playing < 0)  {
             document.getElementById('player1msg').innerHTML = nextState.players[p1].username + ' is logged out';
           } else if (nextState.players[p1].playing < 1) {
-            document.getElementById('player1msg').innerHTML = nextState.players[p1].username + ' is NOT playing';
+            document.getElementById('player1msg').innerHTML = nextState.players[p1].username + ' has NOT joined the hand';
           } else if (nextState.players[p1].playing < 2) {
-            document.getElementById('player1msg').innerHTML = nextState.players[p1].username + ' is playing!';
+            document.getElementById('player1msg').innerHTML = nextState.players[p1].username + ' has asked to join the hand!';
           }
           //gGameState.players[p1].playing = nextState.players[p1].playing;
         //}
@@ -229,33 +229,33 @@ function getGamestate() {
         if (nextState.players[p2].playing < 0)  {
           document.getElementById('player2msg').innerHTML = nextState.players[p2].username + ' is logged out';
         } else if (nextState.players[p2].playing < 1) {
-          document.getElementById('player2msg').innerHTML = nextState.players[p2].username + ' is NOT playing';
+          document.getElementById('player2msg').innerHTML = nextState.players[p2].username + ' has NOT joined the hand';
         } else if (nextState.players[p2].playing < 2) {
-          document.getElementById('player2msg').innerHTML = nextState.players[p2].username + ' is playing!';
+          document.getElementById('player2msg').innerHTML = nextState.players[p2].username + ' has asked to join the hand...';
         }
 
         if (nextState.players[p3].playing < 0)  {
           document.getElementById('player3msg').innerHTML = nextState.players[p3].username + ' is logged out';
         } else if (nextState.players[p3].playing < 1) {
-          document.getElementById('player3msg').innerHTML = nextState.players[p3].username + ' is NOT playing';
+          document.getElementById('player3msg').innerHTML = nextState.players[p3].username + ' has NOT asked to join the hand';
         } else if (nextState.players[p3].playing < 2) {
-          document.getElementById('player3msg').innerHTML = nextState.players[p3].username + ' is playing!';
+          document.getElementById('player3msg').innerHTML = nextState.players[p3].username + ' has asked to join the hand...';
         }
 
         if (nextState.players[p4].playing < 0)  {
           document.getElementById('player4msg').innerHTML = nextState.players[p4].username + ' is logged out';
         } else if (nextState.players[p4].playing < 1) {
-          document.getElementById('player4msg').innerHTML = nextState.players[p4].username + ' is NOT playing';
+          document.getElementById('player4msg').innerHTML = nextState.players[p4].username + ' has NOT asked to join the hand'; 
         } else if (nextState.players[p4].playing < 2) {
-          document.getElementById('player4msg').innerHTML = nextState.players[p4].username + ' is playing!';
+          document.getElementById('player4msg').innerHTML = nextState.players[p4].username + ' has asked to join the hand...';
         }
 
         if (nextState.players[p5].playing < 0)  {
           document.getElementById('player5msg').innerHTML = nextState.players[p5].username + ' is logged out';
         } else if (nextState.players[p5].playing < 1) {
-          document.getElementById('player5msg').innerHTML = nextState.players[p5].username + ' is NOT playing';
+          document.getElementById('player5msg').innerHTML = nextState.players[p5].username + ' has NOT asked to join the hand';
         } else if (nextState.players[p5].playing < 2) {
-          document.getElementById('player5msg').innerHTML = nextState.players[p5].username + ' is playing!';
+          document.getElementById('player5msg').innerHTML = nextState.players[p5].username + ' has asked to join the hand...';
         }
       }
     }
@@ -274,11 +274,13 @@ function joinGame(buttonObj) {
       console.log('joinGame: err = ', responseObject.err);
       messageText.value = 'could not join game...';
     } else {
+      /*
       if (buttonObj.value === 'Join Next Hand') {
         buttonObj.value = 'leave game'
       } else {
         buttonObj.value = 'Join Next Hand';
       }
+      */
     }
   };
   xhr.send();
